@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hello, world!");
+    println!("Rust Book enhanced examples are in bin folder.");
 }

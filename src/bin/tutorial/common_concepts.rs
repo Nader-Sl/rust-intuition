@@ -91,8 +91,6 @@ fn control_flow() {
     for e in arr.rev() { //.rev() reverses the range
         println!("Looping arr element : {}", e);
     }
-
-
 }
 
 fn main() {
