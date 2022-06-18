@@ -16,7 +16,9 @@ fn common_data_types() {
     println!("-------------------------------------\n");
     /*Almost all data types can be automatically infered by the compiler 
     or even intellisense,however can be explicitly defined for precision.*/
-
+    fn print_type_of<T>(str: &str, _: &T) {
+        println!("{} {}", str, std::any::type_name::<T>())
+    }
     //Scalar types
     let _x: u8 = 1; //prefixing a var name with '_' marks it as deprecated so compiler won't warn if not used.
     let _x: i16 = 200;
@@ -28,7 +30,13 @@ fn common_data_types() {
     let _x = 2.0;
     let _x: bool = false;
     let x  = 'c';
-    println!("Scalar Type : x = {}", x);
+
+    print_type_of("type of scalar x =", &x);
+
+    //strings
+    let literal = "Hello World!";
+    print_type_of("type of literal string =", &literal);
+
     /* Compound types */
 
     //Tuple
