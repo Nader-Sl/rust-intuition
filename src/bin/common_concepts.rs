@@ -34,8 +34,11 @@ fn common_data_types() {
     print_type_of("type of scalar x =", &x);
 
     //strings
-    let literal = "Hello World!";
-    print_type_of("type of literal string =", &literal);
+    let string_literal = "Hello World!"; //Hardcoded into the .text of the binary
+    print_type_of("type of string_literal =", &string_literal);
+
+    let string = String::from("Hello World!"); // Size not necessarily known at runtime, can be mutable, Held through a variable (runtime)
+    print_type_of("type of string =", &string);
 
     /* Compound types */
 
