@@ -1,3 +1,3 @@
 # rust-playground
 
-Repo to learn and practice Rust lang.
+Learn Rust lang based on examples.
