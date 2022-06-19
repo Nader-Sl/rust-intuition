@@ -1,4 +1,8 @@
 
+//Don't mind this function, it is just to print the type of the passed param.
+fn print_type_of<T>(str: &str, _: &T) { 
+    println!("{} {}", str, std::any::type_name::<T>())
+}
 
 fn vars_and_mut() {
     println!("\nvars_and_mut");
@@ -16,7 +20,7 @@ fn common_data_types() {
     println!("-------------------------------------\n");
     /*Almost all data types can be automatically infered by the compiler 
     or even intellisense,however can be explicitly defined for precision.*/
- 
+
     //Scalar types
     let _x: u8 = 1; //prefixing a var name with '_' marks it as deprecated so compiler won't warn if not used.
     let _x: i16 = 200;
@@ -61,6 +65,14 @@ fn mul_function(param_x:(f32, f32)) -> f32{
      x * y
  };
  mul //returns mul, no semicolon here.
+}
+
+fn functions() {
+    println!("\nfunctions");
+    println!("-------------------------------------\n");
+
+    let result  = mul_function((3.3,2.2));
+    println!("mul_function call result: {}", result);
 }
 
 fn control_flow() {
@@ -120,12 +132,10 @@ fn var_shadowing() {
 }
 
 fn main() {
-    vars_and_mut();
     common_data_types();
+    vars_and_mut();
     control_flow();
     var_shadowing();
-    println!("\nfunction test");
-    println!("-------------------------------------\n");
-    println!("mul_function call result: {}",mul_function((3.3,2.2)));
+    functions();
  
 }
