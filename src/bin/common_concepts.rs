@@ -16,9 +16,7 @@ fn common_data_types() {
     println!("-------------------------------------\n");
     /*Almost all data types can be automatically infered by the compiler 
     or even intellisense,however can be explicitly defined for precision.*/
-    fn print_type_of<T>(str: &str, _: &T) {
-        println!("{} {}", str, std::any::type_name::<T>())
-    }
+ 
     //Scalar types
     let _x: u8 = 1; //prefixing a var name with '_' marks it as deprecated so compiler won't warn if not used.
     let _x: i16 = 200;
@@ -56,7 +54,7 @@ fn common_data_types() {
     //println!("arr = {:#?}, arr2 = {:#?}", arr, arr2); //pretty print 2 (every component on a new line )
 }
 
-//multiply the two floats passed in via a tuple param.
+//multiply the two floats passed in via a tuple param and returns the result.
 fn mul_function(param_x:(f32, f32)) -> f32{
  let mul = { //scope based expression that decays into a value.
      let (x,y) = param_x;
@@ -104,10 +102,28 @@ fn control_flow() {
     }
 }
 
+fn var_shadowing() {
+    
+    println!("\nvar_shadowing");
+    println!("-------------------------------------\n");
+
+    let x = 1;
+    println!("x before shadowing = {}", x);
+
+     { //variable x can be redefined inside its own scope shadowing the one in the parent scope.
+         let x = 5; 
+         println!("x after shadowing = {}", x);
+     }//scope ends, var x is now invalidated (popped out of the stack).
+
+     // shadowing scope exited, variable x now points back to the global variable before it ever being shadowed
+     println!("x after shadowing scope exit = {}", x);  
+}
+
 fn main() {
     vars_and_mut();
     common_data_types();
     control_flow();
+    var_shadowing();
     println!("\nfunction test");
     println!("-------------------------------------\n");
     println!("mul_function call result: {}",mul_function((3.3,2.2)));
