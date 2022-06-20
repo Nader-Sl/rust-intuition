@@ -97,11 +97,11 @@ fn function_ownership() {
 
 fn refs_and_burrowing() {
     /*
-        If we want to access the data owned by another variable without having to transfer ownership, we can use references.
-        Rules of references:
-            * references are immutable by default so we can't change their value.
-            * references can be set to mutable with one big restriction: you can have only one mutable reference to a particular piece of data at a time. 
-     */
+       If we want to access the data owned by another variable without having to transfer ownership, we can use references.
+       Rules of references:
+           * references are immutable by default so we can't change their value.
+           * references can be set to mutable with one big restriction: you can have only one mutable reference to a particular piece of data at a time.
+    */
     println!("\nrefs_and_burrowing");
     println!("-------------------------------------\n");
 
@@ -123,31 +123,49 @@ fn refs_and_burrowing() {
     let ms1 = &mut s;
 
     ms1.push_str(" world!"); // append " world!" to s's data.
-    
+
     println!("ms1 = {}", ms1);
 
     let ms2 = &mut s;
 
     //Uncommenting the following line will result in a compilation error because there can only be one mutable reference to the same piece of data at a time.
     //println!("ms1 = {}", ms1);
-    
 }
 
+fn string_slice() {
+
+    //String slices are very useful in that many times we need to reference only a slice/portion of the string
+    //without having to copy it, String literals themselves are string slices!
+
+    println!("\nstring_slice");
+    println!("-------------------------------------\n");
+
+    //It is a good practice to use &str (slice type) to pass any string or a slice of it by reference.
+    //The following function accepts both types of String and String Slice (&str) made possible by dered coersions.
+    fn print_str(param: &str) {
+        println!("String Slice = {}", param);
+    }
+
+    let my_str = String::from("hello world");
+    let slice = &my_str[5..]; //Slice type (ref of a substring/portion of my_str)
+    print_str(slice); // slice from index 5 till end
+}
 
 fn dangling_reference() {
 
     /* It is impossible for the compiled code to have dangling references, the compiler will always catch it at compile phase*/
-    
+
     //Uncommenting the following function will throw a compile-time error.
     // fn dangle() -> &'static String {
     //     let s = String::from("hello");
     //     &s
-    // }  
+    // }
 }
 
 fn main() {
     assignment_ownership();
     function_ownership();
     refs_and_burrowing();
+    string_slice();
     dangling_reference();
 }
