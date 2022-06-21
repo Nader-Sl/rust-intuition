@@ -1,3 +1,3 @@
 # rust-playground
 
-Learn Rust lang based on examples.
+A rust learn-by-example-and-comments repo, based on the Rust's book chapters flow, with custom examples and heavy comments.
