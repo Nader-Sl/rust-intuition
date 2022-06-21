@@ -132,7 +132,7 @@ fn refs_and_burrowing() {
     //println!("ms1 = {}", ms1);
 }
 
-fn string_slice() {
+fn slice_type() {
 
     //String slices are very useful in that many times we need to reference only a slice/portion of the string
     //without having to copy it, String literals themselves are string slices!
@@ -149,6 +149,20 @@ fn string_slice() {
     let my_str = String::from("hello world");
     let slice = &my_str[5..]; //Slice type (ref of a substring/portion of my_str)
     print_str(slice); // slice from index 5 till end
+
+    //Slice type is not only bound to string type, it is simply a reference to a portion of memory.
+    
+    //array slice
+    let a = [1, 2, 3, 4, 5];
+
+    let slice = &a[1..=3]; // 2,3,4
+
+    println!("Array slice:");
+    for e in slice {
+        print!("{} ", e);
+    }
+    println!();
+    
 }
 
 fn dangling_reference() {
@@ -166,6 +180,6 @@ fn main() {
     assignment_ownership();
     function_ownership();
     refs_and_burrowing();
-    string_slice();
+    slice_type();
     dangling_reference();
 }
