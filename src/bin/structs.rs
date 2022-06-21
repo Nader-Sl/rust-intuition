@@ -27,7 +27,7 @@ fn struct_def_and_init() {
     impl Rectangle {
         
         // This is a static function that is listed under this struct, it doesn't require an instance of this struct
-        // in order to be invoked, instead its invoked via Rectangle::default().
+        // which explains why it lacks the &self param, it is invoked via Rectangle::default().
         fn default() -> Rectangle {
             Rectangle{ width: 800, height: 600}
         }
