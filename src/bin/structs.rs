@@ -16,18 +16,35 @@ fn struct_def_and_init() {
 
     //impl of methods for Rectangle struct.
     impl Rectangle {
+
+        //reference to self as a function param points to the current instance of which this method is called upon.
         fn area(&self) -> u32 {
             self.width * self.height
         }
     }
 
+    // A struct can define multiple impl blocks, but prefer to use one if in same file/location.
+    impl Rectangle {
+        
+        // This is a static function that is listed under this struct, it doesn't require an instance of this struct
+        // in order to be invoked, instead its invoked via Rectangle::default().
+        fn default() -> Rectangle {
+            Rectangle{ width: 800, height: 600}
+        }
+    }
+
     //Instantiating Structs
     let rect1 = Rectangle {
-        width: 800,
-        height: 600,
+        width: 500,
+        height: 500,
     };
 
-    println!("The area of rectangle ({},{}) is {}.", rect1.width, rect1.height, rect1.area());
+    let area = rect1.area(); //invoke the instance method to get the area.
+    println!("The area of rect1 ({},{}) is {}.", rect1.width, rect1.height, area);
+
+    let default_rect = Rectangle::default(); //Invoke the static function to create a new defaulted 'Rectangle' instance.
+    println!("The area of default_rect ({},{}) is {}.", rect1.width, rect1.height, default_rect.area());
+
 }
 
 fn structs_flavors() {
