@@ -1,11 +1,13 @@
+ 
 //Don't mind this function, it is just to print the type of the passed param.
-fn print_type_of<T>(str: &str, _: &T) {
+pub fn print_type_of<T>(str: &str, _: &T) {
     println!("{} {}", str, std::any::type_name::<T>())
 }
 
-fn vars_and_mut() {
-    println!("\nvars_and_mut");
-    println!("-------------------------------------\n");
+pub fn vars_and_mut() {
+    
+    crate::example_prologue!("vars_and_mut");
+
     let x = 5; //immutable by default
                //x = 6; //compile error, its immutable.
     let mut y = 5; //marked as mutable, can be re-assigned.
@@ -13,9 +15,10 @@ fn vars_and_mut() {
     println!("X = {}, y = {}", x, y);
 }
 
-fn common_data_types() {
-    println!("\ncommon_data_types");
-    println!("-------------------------------------\n");
+pub fn common_data_types() {
+
+    crate::example_prologue!("common_data_types");
+
     /*Almost all data types can be automatically infered by the compiler
     or even intellisense,however can be explicitly defined for precision.*/
 
@@ -66,17 +69,18 @@ fn mul_function(param_x: (f32, f32)) -> f32 {
     mul //returns mul, no semicolon here.
 }
 
-fn functions() {
-    println!("\nfunctions");
-    println!("-------------------------------------\n");
+pub fn functions() {
 
+    crate::example_prologue!("functions");
+ 
     let result = mul_function((3.3, 2.2));
     println!("mul_function call result: {}", result);
 }
 
-fn control_flow() {
-    println!("\ncontrol_flow");
-    println!("-------------------------------------\n");
+pub fn control_flow() {
+
+    crate::example_prologue!("control_flow");
+
     //standard if-else handling
     let number = 6;
 
@@ -113,11 +117,34 @@ fn control_flow() {
         //.rev() reverses the range
         println!("Looping arr element : {}", e);
     }
+
+    //Matching (Pattern Matching)
+    //Similar to a case switch in other language, but way more powerful.
+
+    use rand::Rng; //using Rng from rand crate (https://docs.rs/rand/0.8.5/rand/trait.Rng.html)
+    let mut rng = rand::thread_rng();// random generator
+    let number = rng.gen_range(0..=20); // generated a random u32 [0..20]
+
+    print!("Generated a random number {} =>", number);
+    match number {
+        // Match a single value
+        1 => println!("One!"),
+        // Match several values
+        2 | 3 | 5 | 7 | 11 => println!("This is a prime"),
+        // TODO ^ Try adding 13 to the list of prime values
+        // Match an inclusive range
+        13..=19 => println!("A teen"),
+        // Handle the rest of cases
+        _ => println!("Ain't special"),
+        // TODO ^ Try commenting out this catch-all arm
+    }
+
+
 }
 
-fn var_shadowing() {
-    println!("\nvar_shadowing");
-    println!("-------------------------------------\n");
+pub fn var_shadowing() {
+    
+    crate::example_prologue!("var_shadowing");
 
     let x = 1;
     println!("x before shadowing = {}", x);
@@ -130,12 +157,4 @@ fn var_shadowing() {
 
     // shadowing scope exited, variable x now points back to the global variable before it ever being shadowed
     println!("x after shadowing scope exit = {}", x);
-}
-
-fn main() {
-    common_data_types();
-    vars_and_mut();
-    control_flow();
-    var_shadowing();
-    functions();
 }

@@ -6,7 +6,9 @@
 */
 
 //defining and instantiating structs
-fn struct_def_and_init() {
+pub fn struct_def_and_init() {
+
+    crate::example_prologue!("struct_def_and_init");
 
     //Defining a Rectangle struct.
     struct Rectangle {
@@ -16,7 +18,6 @@ fn struct_def_and_init() {
 
     //impl of methods for Rectangle struct.
     impl Rectangle {
-
         //reference to self as a function param points to the current instance of which this method is called upon.
         fn area(&self) -> u32 {
             self.width * self.height
@@ -25,11 +26,13 @@ fn struct_def_and_init() {
 
     // A struct can define multiple impl blocks, but prefer to use one if in same file/location.
     impl Rectangle {
-        
         // This is a static function that is listed under this struct, it doesn't require an instance of this struct
         // which explains why it lacks the &self param, it is invoked via Rectangle::default().
         fn default() -> Rectangle {
-            Rectangle{ width: 800, height: 600}
+            Rectangle {
+                width: 800,
+                height: 600,
+            }
         }
     }
 
@@ -40,34 +43,58 @@ fn struct_def_and_init() {
     };
 
     let area = rect1.area(); //invoke the instance method to get the area.
-    println!("The area of rect1 ({},{}) is {}.", rect1.width, rect1.height, area);
+    println!(
+        "The area of rect1 ({},{}) is {}.",
+        rect1.width, rect1.height, area
+    );
 
     let default_rect = Rectangle::default(); //Invoke the static function to create a new defaulted 'Rectangle' instance.
-    println!("The area of default_rect ({},{}) is {}.", rect1.width, rect1.height, default_rect.area());
-
+    println!(
+        "The area of default_rect ({},{}) is {}.",
+        rect1.width,
+        rect1.height,
+        default_rect.area()
+    );
 }
 
-fn structs_flavors() {
+pub fn structs_flavors() {
+
+    crate::example_prologue!("structs_flavors");
+
     // There are 3 main flavours to Rust structs.
     //  1 - standard struct with named fields.
     //  2 - Tuple structs: are like structs but with unnamed fields, they are used as tuples.
-    //  3 - Unit-like structs: are structs without any fields, such structs can be useful when you need to 
+    //  3 - Unit-like structs: are structs without any fields, such structs can be useful when you need to
     //      implement a trait on some type but don’t have any data that you want to store in the type itself.
 
-    //standard struct
+    //Standard struct
+    #[derive(Debug)]
     struct Rectangle {
         width: u32,
-        height: u32
+        height: u32,
     }
 
     //Tuple struct
-    struct Color (u32, u32, u32);
+    #[derive(Debug)]
+    struct Color(u32, u32, u32);
 
     //Unit-like struct
+    #[derive(Debug)]
     struct UnitLike; //without paranthesis
+
+    let rect = Rectangle{width:800, height: 600};
+    let color = Color(255,255,255);
+    let unit_like = UnitLike;
+
+    println!("rect: {:?} => Standard struct", rect);
+    println!("color: {:?} => Tuple struct", color);
+    println!("unit_like: {:?} => UnitLike struct", unit_like);
+
 }
 
-fn structs_mutability() {
+pub fn structs_mutability() {
+
+    crate::example_prologue!("structs_mutability");
 
     // By default structs are immmutable, therefore attempting to set one of its fields will result in a compilation error.
     // Structs' fields can't be set as mut (inherited mutability) otherwise the compiler would complain.
@@ -76,8 +103,8 @@ fn structs_mutability() {
     //  2- Allow interior mutability of the fields by using Cell or RefCell<T> for non threadsafe operations,
     //     otherwise use  Mutex<T>, RwLock<T> or atomic types for thread-safe operaitons.
 
-    #[derive(Debug)]  // The `derive` attribute automatically creates the implementation
-    // required to make this `struct` printable with `fmt::Debug`.
+    #[derive(Debug)] // The `derive` attribute automatically creates the implementation
+                     // required to make this `struct` printable with `fmt::Debug`.
     struct User {
         active: bool,
         username: String,
@@ -96,7 +123,7 @@ fn structs_mutability() {
     // user1.active = false;
 
     //Now lets create another inheritently mutable instance of 'User' based on the user1 instance above.
-    let mut user2 = User { ..user1}; //This is much like ES6's spread operator but with two dots instead of 3.
+    let mut user2 = User { ..user1 }; //This is much like ES6's spread operator but with two dots instead of 3.
     user2.active = true; //Compiles ok.
     println!("User2 (mut as a whole struct)= {:?}", user2);
 
@@ -105,10 +132,10 @@ fn structs_mutability() {
     // we will choose to use the Cell wrapper for our purpose because we need to just edit the value
     // and we don't care about thread-safety because we are not using multiple threads.
 
-    use std::cell::{Cell};
+    use std::cell::Cell;
 
-    #[derive(Debug)]  // The `derive` attribute automatically creates the implementation
-    // required to make this `struct` printable with `fmt::Debug`.
+    #[derive(Debug)] // The `derive` attribute automatically creates the implementation
+                     // required to make this `struct` printable with `fmt::Debug`.
     struct ExUser {
         active: Cell<bool>,
         username: String,
@@ -123,14 +150,49 @@ fn structs_mutability() {
         sign_in_count: 1,
     };
 
-    exUser.active.set(false);//We managed to do what we wanted, it compiles!
-    println!("exUser (with interiorly mutable field 'active' set to false ) = {:?}", exUser);
-
-
+    exUser.active.set(false); //We managed to do what we wanted, it compiles!
+    println!(
+        "exUser (with interiorly mutable field 'active' set to false ) = {:?}",
+        exUser
+    );
 }
 
-fn main() {
-    struct_def_and_init();
-    structs_flavors();
-    structs_mutability();
+pub fn enums() {
+    
+    crate::example_prologue!("enums");
+
+    //Enums, besides the simple type, can have different variants that can associate data to them.
+    enum Message {
+        Quit, //simple type, no data associated.
+        Write(String), // enum with associated unnamed data (Tuple variant)
+        ChangeColor(i32, i32, i32),// enum with associated unnamed data (Tuple variant)
+        Move { x: i32, y: i32 }, // enum with associated named data (Struct variant)
+ 
+    }
+
+    impl Message {
+        fn call(&self) {
+            match self{
+                Message::Quit => println!("Msg : Quit"),
+                Message::Write(str) => println!("Msg : Write {}", str),
+                Message::Move{x, y} => println!("Msg : Move : ({},{})",x , y),
+                Message::ChangeColor(r, g, b) => println!("Msg : ChangeColor : {},{},{}", r, g, b),
+                _ => {},
+            }
+           
+        }
+    }
+
+    let msg_queue = [
+        Message::Write(String::from("Hello World")),
+        Message::Move{x: 100, y:200},
+        Message::ChangeColor(255,255,255),
+        Message::Quit
+    ];
+
+    //Iterate the msg queue and call each's call function.
+    for msg in msg_queue {
+        msg.call();
+    }
 }
+ 

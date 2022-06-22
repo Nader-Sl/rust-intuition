@@ -4,7 +4,7 @@
 * There can only be one owner at a time.
 * When the owner goes out of scope, the value will be dropped.*/
 
-fn assignment_ownership() {
+pub fn assignment_ownership() {
     /* Simple types of a fixed size known at compile time such as the scalar types which are entirely living on
     the stack are always copied/cloned on assignment, such types implement the Copy trait and that includes:
         * All the integer types, such as u32.
@@ -13,9 +13,7 @@ fn assignment_ownership() {
         * The character type, char.
         * Tuples, if they only contain types that also implement Copy. For example, (i32, i32) implements Copy, but (i32, String) does not.
     */
-
-    println!("\nassignment_ownership");
-    println!("-------------------------------------\n");
+    crate::example_prologue!("assignment_ownership");
 
     let x = 5; //x owns the data (5)
     let y = x; // y owns a copy of x's data (5) since i32 is a simple type that implements the copy trait.
@@ -36,9 +34,9 @@ fn assignment_ownership() {
     println!("s1 = {}, s2 = {}", s1, s2);
 }
 
-fn function_ownership() {
-    println!("\nfunction_ownership");
-    println!("-------------------------------------\n");
+pub fn function_ownership() {
+
+    crate::example_prologue!("function_ownership");
 
     fn takes_ownership(some_string: String) {
         // some_string comes into scope
@@ -95,15 +93,14 @@ fn function_ownership() {
     //println!("s2= {}", s2);
 }
 
-fn refs_and_burrowing() {
+pub fn refs_and_burrowing() {
     /*
        If we want to access the data owned by another variable without having to transfer ownership, we can use references.
        Rules of references:
            * references are immutable by default so we can't change their value.
            * references can be set to mutable with one big restriction: you can have only one mutable reference to a particular piece of data at a time.
     */
-    println!("\nrefs_and_burrowing");
-    println!("-------------------------------------\n");
+    crate::example_prologue!("refs_and_burrowing");
 
     fn calculate_length(s: &String) -> usize {
         s.len()
@@ -132,13 +129,12 @@ fn refs_and_burrowing() {
     //println!("ms1 = {}", ms1);
 }
 
-fn slice_type() {
+pub fn slice_type() {
 
     //String slices are very useful in that many times we need to reference only a slice/portion of the string
     //without having to copy it, String literals themselves are string slices!
 
-    println!("\nstring_slice");
-    println!("-------------------------------------\n");
+    crate::example_prologue!("slice_type");
 
     //It is a good practice to use &str (slice type) to pass any string or a slice of it by reference.
     //The following function accepts both types of String and String Slice (&str) made possible by dered coersions.
@@ -165,8 +161,8 @@ fn slice_type() {
     
 }
 
-fn dangling_reference() {
-
+pub fn dangling_reference() {
+    crate::example_prologue!("dangling_reference");
     /* It is impossible for the compiled code to have dangling references, the compiler will always catch it at compile phase*/
 
     //Uncommenting the following function will throw a compile-time error.
@@ -174,12 +170,4 @@ fn dangling_reference() {
     //     let s = String::from("hello");
     //     &s
     // }
-}
-
-fn main() {
-    assignment_ownership();
-    function_ownership();
-    refs_and_burrowing();
-    slice_type();
-    dangling_reference();
 }

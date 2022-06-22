@@ -1,0 +1,157 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'rust-playground'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=rust-playground",
+                    "--package=rust-playground"
+                ],
+                "filter": {
+                    "name": "rust-playground",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'rust-playground'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=rust-playground",
+                    "--package=rust-playground"
+                ],
+                "filter": {
+                    "name": "rust-playground",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'common_concepts'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=common_concepts",
+                    "--package=rust-playground"
+                ],
+                "filter": {
+                    "name": "common_concepts",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'common_concepts'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=common_concepts",
+                    "--package=rust-playground"
+                ],
+                "filter": {
+                    "name": "common_concepts",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'ownership'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=ownership",
+                    "--package=rust-playground"
+                ],
+                "filter": {
+                    "name": "ownership",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'ownership'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=ownership",
+                    "--package=rust-playground"
+                ],
+                "filter": {
+                    "name": "ownership",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'structs'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=structs",
+                    "--package=rust-playground"
+                ],
+                "filter": {
+                    "name": "structs",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'structs'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=structs",
+                    "--package=rust-playground"
+                ],
+                "filter": {
+                    "name": "structs",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
