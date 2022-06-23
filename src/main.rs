@@ -3,6 +3,8 @@ pub mod examples {
     pub mod macros;
     pub mod ownership;
     pub mod structs_and_enums;
+
+    pub mod modules;
 }
 
 fn main() {
@@ -28,4 +30,8 @@ fn main() {
     examples::structs_and_enums::structs_flavors();
     examples::structs_and_enums::structs_mutability();
     examples::structs_and_enums::enums();
+
+    //modules
+    examples::modules::main();
+
 }
