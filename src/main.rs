@@ -3,6 +3,7 @@ pub mod examples {
     pub mod macros;
     pub mod ownership;
     pub mod structs_and_enums;
+    pub mod collections;
 
     pub mod modules;
 }
@@ -33,5 +34,10 @@ fn main() {
 
     //modules
     examples::modules::main();
+
+    //collections
+    examples::collections::collection_vec();
+    examples::collections::collection_hashmap();
+
 
 }

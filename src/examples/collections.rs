@@ -1,0 +1,86 @@
+//Doc Ref : https://doc.rust-lang.org/std/collections/index.html
+
+/*
+Rust’s collections can be grouped into four major categories:
+    - Sequences: Vec, VecDeque, LinkedList
+    - Maps: HashMap, BTreeMap
+    - Sets: HashSet, BTreeSet
+    - Misc: BinaryHeap
+*/
+
+// Examples will only be introducing the two most commonly used container types: Vec and HashMap.
+
+pub fn collection_vec() {
+
+    crate::example_prologue!("collection_vec");
+
+    /*
+       The first collection type we’ll look at is Vec<T>, also known as a vector.
+       Vectors allow you to store more than one value in a single data structure that puts all
+       the values next to each other in memory. Vectors can only store values of the same type.
+       They are useful when you have a list of items, such as the lines of text in a file or
+       the prices of items in a shopping cart.
+    */
+
+    //lets create an inventory of weapon names.
+    //'inventory' should be mutable because we need to modify it later by pushing data to it.
+    let mut inventory: Vec<&str> = Vec::new();
+    //push the elements into the array.
+    inventory.push("AK47");
+    inventory.push("FAMAS");
+    inventory.push("P90");
+    inventory.push("SCAR");
+
+    //Alternatively we can declare a non-mutable owner in combination with the vec! macro which will automate what's done above.
+    let inventory: Vec<&str> = vec!["AK47", "FAMAS", "P90", "SCAR"];
+
+    //Iterate over the inventory container by reference to void moving vector elements into the loop so we can use it afterwards.
+    for weapon in &inventory {
+        println!("Iterating over weapon : {}", weapon);
+    }
+}
+
+pub fn collection_hashmap() {
+
+    crate::example_prologue!("collection_hashmap");
+
+    /*
+        Hash maps are useful when you want to look up data not by using an index.
+        as you can with vectors, but by using a key that can be of any type.
+        For example, in a game, you could keep track of each team’s score in a hash map
+        in which each key is a team’s name and the values are each team’s score.
+        Given a team name, you can retrieve its score.
+    */
+
+    //Let's create a map for storing weapons and their corresponding prices.
+
+    //We first have to use that module from the std lib since its not not included
+    //in the features brought into scope automatically in the prelude.
+    use std::collections::HashMap;
+
+    let mut weapons_db = HashMap::new(); //create a new hashmap
+
+    //insert into map the key/pair, weapon name being the key, and the corresponding price being the value.
+    weapons_db.insert("AK47", 3000);
+    weapons_db.insert("FAMAS", 25000);
+    weapons_db.insert("P90", 2350);
+    weapons_db.insert("SCAR", 4000);
+
+    //There's another cool way to construct a hashmap if we happened to have two
+    //separate preconstructed vecs one representing the keys and the other the values.
+
+    let inventory: Vec<&str> = vec!["AK47", "FAMAS", "P90", "SCAR"];
+    
+    let prices = vec![3000,25000,2350,4000];
+
+    //the following line of code uses the **zip** function which zips the values from both
+    //iterators in parallel to form a map of pairs. We finally call the **collect** function
+    //to turn the iterator back into collection.
+    let weapons_db: HashMap<_, _> =
+    inventory.iter().zip(prices.iter()).collect();
+
+    //iterate the map (key,val) by reference using the map's iterator
+    for (weapon, price) in weapons_db.iter() {
+        println!("The price of {} is {}", weapon, price);
+    }
+}
