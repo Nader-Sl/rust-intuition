@@ -97,8 +97,8 @@ pub fn collection_hashmap() {
     let weapon = &inventory[1]; // FAMAS weapon
     let new_price = 20000;
     let old_entry = weapons_db.insert(weapon, &new_price);
-    //The 'insert' function returns the old value before replacement, it is wrapped by option since the value 
-    //since there might not be an older entry with the same key in the map. in that case the option would
+    //The 'insert' function returns the old value before replacement, it is wrapped by 'Option' since
+    //there might not be an older entry with the same key in the map. in that case the 'Option' would
     //be of an enum value 'none' but since we can guarantee that the entry is already there, we can just call 
     //unwrap to access the original value (price).
     println!("Updated the old price of {} from {} to {}", weapon, old_entry.unwrap(), new_price);  
