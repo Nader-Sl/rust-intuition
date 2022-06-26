@@ -4,6 +4,7 @@ pub mod examples {
     pub mod ownership;
     pub mod structs_and_enums;
     pub mod collections;
+    pub mod error_handling;
 
     pub mod modules;
 }
@@ -38,6 +39,21 @@ fn main() {
     //collections
     examples::collections::collection_vec();
     examples::collections::collection_hashmap();
+
+    //Error Handling -- Runs last since it demonstrates fatal errors => program termination.
+    //Comment the following lines incrementally one at a time after testing each line to try them all out,
+    //since each call can be fatal and terminate the application.
+
+    examples::error_handling::Panic::intentional();
+    examples::error_handling::Panic::invalid_memory();
+    examples::error_handling::Result_Handling::panic_if_err_1();
+    examples::error_handling::Result_Handling::panic_if_err_2();
+    examples::error_handling::Result_Handling::panic_if_err_3();
+    examples::error_handling::Result_Handling::match_err_type();
+    examples::error_handling::Result_Handling::propagate_error();
+    examples::error_handling::Result_Handling::custom_result();
+
+
 
 
 }
