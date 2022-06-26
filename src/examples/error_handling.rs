@@ -139,6 +139,7 @@ impl Result_Handling {
                 Ok(even_number / 2)
             } else {
                 //create a new error from ErrorKind and string.
+                //Note that we can create our own Error type but will be easier to understand after covering 'Traits'.
                 Err(Error::new(ErrorKind::InvalidInput, "Not an even number"))
             }
         }
