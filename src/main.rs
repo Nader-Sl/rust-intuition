@@ -2,7 +2,7 @@ pub mod examples {
     pub mod common_concepts;
     pub mod macros;
     pub mod ownership;
-    pub mod data_structures {
+    pub mod prototype_structures {
         pub mod enums;
         pub mod structs;
         pub mod unions;
@@ -36,14 +36,14 @@ fn main() {
     examples::ownership::dangling_reference();
 
     //oop
-    examples::data_structures::structs::struct_def_and_init();
-    examples::data_structures::structs::structs_flavors();
-    examples::data_structures::structs::structs_mutability();
+    examples::prototype_structures::structs::struct_def_and_init();
+    examples::prototype_structures::structs::structs_flavors();
+    examples::prototype_structures::structs::structs_mutability();
 
-    examples::data_structures::enums::enums_basic();
-    examples::data_structures::enums::enums_advanced();
+    examples::prototype_structures::enums::enums_basic();
+    examples::prototype_structures::enums::enums_advanced();
 
-    examples::data_structures::unions::main();
+    examples::prototype_structures::unions::main();
 
     //modules
     examples::modules::main();
