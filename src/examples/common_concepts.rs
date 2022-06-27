@@ -142,12 +142,14 @@ pub fn var_shadowing() {
     let x = 1;
     println!("x before shadowing = {}", x);
 
+    //This will redefine var x similar to re-assigning it without 'let' but also without 'mut' and under a new owner.
     let x = 5;
     println!("x after shadowing = {}", x);
 
     //Inner scope Shadowing
     {
-        //variable x can be redefined inside its own scope shadowing the one in the parent scope.
+        //variable x can be defined inside its own scope, but it doesn't override the one in the outer scope
+        //it is only bound to the lifetime of this scope.
         let x = 10;
         println!("x after inner scope shadowing = {}", x);
     } //scope ends, var x is now invalidated (popped out of the stack).
