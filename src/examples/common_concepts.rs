@@ -1,11 +1,9 @@
- 
 //Don't mind this function, it is just to print the type of the passed param.
 pub fn print_type_of<T>(str: &str, _: &T) {
     println!("{} {}", str, std::any::type_name::<T>())
 }
 
 pub fn vars_and_mut() {
-    
     crate::example_prologue!("vars_and_mut");
 
     let x = 5; //immutable by default
@@ -16,7 +14,6 @@ pub fn vars_and_mut() {
 }
 
 pub fn common_data_types() {
-
     crate::example_prologue!("common_data_types");
 
     /*Almost all data types can be automatically infered by the compiler
@@ -70,15 +67,13 @@ fn mul_function(param_x: (f32, f32)) -> f32 {
 }
 
 pub fn functions() {
-
     crate::example_prologue!("functions");
- 
+
     let result = mul_function((3.3, 2.2));
     println!("mul_function call result: {}", result);
 }
 
 pub fn control_flow() {
-
     crate::example_prologue!("control_flow");
 
     //standard if-else handling
@@ -122,7 +117,7 @@ pub fn control_flow() {
     //Similar to a case switch in other language, but way more powerful.
 
     use rand::Rng; //using Rng from rand crate (https://docs.rs/rand/0.8.5/rand/trait.Rng.html)
-    let mut rng = rand::thread_rng();// random generator
+    let mut rng = rand::thread_rng(); // random generator
     let number = rng.gen_range(0..=20); // generated a random u32 [0..20]
 
     print!("Generated a random number {} =>", number);
@@ -138,23 +133,25 @@ pub fn control_flow() {
         _ => println!("Ain't special"),
         // TODO ^ Try commenting out this catch-all arm
     }
-
-
 }
 
 pub fn var_shadowing() {
-    
     crate::example_prologue!("var_shadowing");
 
+    //Same scope shadowing.
     let x = 1;
     println!("x before shadowing = {}", x);
 
+    let x = 5;
+    println!("x after shadowing = {}", x);
+
+    //Inner scope Shadowing
     {
         //variable x can be redefined inside its own scope shadowing the one in the parent scope.
-        let x = 5;
-        println!("x after shadowing = {}", x);
+        let x = 10;
+        println!("x after inner scope shadowing = {}", x);
     } //scope ends, var x is now invalidated (popped out of the stack).
 
     // shadowing scope exited, variable x now points back to the global variable before it ever being shadowed
-    println!("x after shadowing scope exit = {}", x);
+    println!("x after inner shadowing scope exits = {}", x);
 }
