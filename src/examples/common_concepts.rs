@@ -154,6 +154,6 @@ pub fn var_shadowing() {
         println!("x after inner scope shadowing = {}", x);
     } //scope ends, var x is now invalidated (popped out of the stack).
 
-    // shadowing scope exited, variable x now points back to the global variable before it ever being shadowed
+    // shadowing scope exited, variable x here refers to the value owner before the last inner scope.
     println!("x after inner shadowing scope exits = {}", x);
 }
