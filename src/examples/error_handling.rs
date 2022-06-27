@@ -1,4 +1,4 @@
-//Doc Ref https://doc.rust-lang.org/rust-by-example/error.html
+//Book Ref https://doc.rust-lang.org/book/ch09-00-error-handling.html
 pub struct Panic {
     //Unrecoverable Errors with panic!
     //Sometimes, bad things happen in your code, and there’s nothing you can do about it.
@@ -22,6 +22,7 @@ pub struct Panic {
 
 impl Panic {
     pub fn intentional() {
+        crate::example_prologue!("Intentional Panic");
         //We can intentionally call panic! macro with a failure message.
         //Since we haven't change the default behaviour of panic in the cargo.toml file
         //panic will print  failure message, unwind and clean up the stack and then terminate the program.
@@ -30,6 +31,7 @@ impl Panic {
     }
 
     pub fn invalid_memory() {
+        crate::example_prologue!("Invalid memory panic");
         //referencing an invalid index (memory access violation) is unrecoverable & will lead to panicing!
         let v = vec![1, 2, 3];
         v[99];
@@ -55,7 +57,10 @@ use std::io::{Error, ErrorKind}; //use error related types from the io module.
 const FILE_NAME: &str = "sample.txt";
 
 impl Result_Handling {
+
     pub fn panic_if_err_1() {
+
+        crate::example_prologue!("panic_if_err_1");
         //Try to open the file (returns a Result)
         let open_result = File::open(FILE_NAME);
 
@@ -67,16 +72,23 @@ impl Result_Handling {
     }
 
     pub fn panic_if_err_2() {
+
+        crate::example_prologue!("panic_if_err_2");
         //More convinient 1 liner panic if error, call 'unwrap' on the result.
         File::open(FILE_NAME).unwrap();
     }
 
     pub fn panic_if_err_3() {
+
+        crate::example_prologue!("panic_if_err_3");
         //More convinient 1 liner panic if error with a custom message, call 'expect' on the result.
         let _resolved_file = File::open(FILE_NAME).expect("Failed to open sample.txt");
     }
 
     pub fn match_err_type() {
+
+        crate::example_prologue!("match_err_type");
+
         //Let's now match the type of error and based on that take an action whether to try recover or panic.
 
         let open_result = File::open(FILE_NAME);
@@ -102,6 +114,9 @@ impl Result_Handling {
     }
 
     pub fn propagate_error() {
+
+        crate::example_prologue!("propagate_error");
+
         // We can propagate errors wrapped in a Result to be handled by the caller.
         fn inner_propagate_error() -> Result<String, Error> {
             use std::io::Read; //required for read_to_string
@@ -128,6 +143,9 @@ impl Result_Handling {
     }
 
     pub fn custom_result() {
+
+        crate::example_prologue!("custom_result");
+
         //Lets now create our own Result returning function.
 
         //Consider the function that takes in only an unsigned even number and returns half of it

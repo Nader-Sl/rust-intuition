@@ -2,7 +2,11 @@ pub mod examples {
     pub mod common_concepts;
     pub mod macros;
     pub mod ownership;
-    pub mod structs_and_enums;
+    pub mod oop {
+        pub mod enums;
+        pub mod structs;
+        pub mod unions;
+    }
     pub mod collections;
     pub mod error_handling;
 
@@ -10,7 +14,6 @@ pub mod examples {
 }
 
 fn main() {
-
     println!("Examples are in the ./examples folder.\n");
 
     //Common Concepts
@@ -27,11 +30,15 @@ fn main() {
     examples::ownership::slice_type();
     examples::ownership::dangling_reference();
 
-    //Structs and Enums.
-    examples::structs_and_enums::struct_def_and_init();
-    examples::structs_and_enums::structs_flavors();
-    examples::structs_and_enums::structs_mutability();
-    examples::structs_and_enums::enums();
+    //oop
+    examples::oop::structs::struct_def_and_init();
+    examples::oop::structs::structs_flavors();
+    examples::oop::structs::structs_mutability();
+
+    examples::oop::enums::enums_basic();
+    examples::oop::enums::enums_advanced();
+
+    examples::oop::unions::main();
 
     //modules
     examples::modules::main();
@@ -52,8 +59,4 @@ fn main() {
     examples::error_handling::Result_Handling::match_err_type();
     examples::error_handling::Result_Handling::propagate_error();
     examples::error_handling::Result_Handling::custom_result();
-
-
-
-
 }
