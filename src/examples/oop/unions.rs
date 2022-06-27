@@ -21,7 +21,7 @@ pub fn main() {
     // all of its fields rounded to its alignment, and an alignment of the maximum alignment of all
     // of its fields. These maximums may come from different fields.
 
-    #[repr(C)] // C enum conformation attribute.
+    #[repr(C)] // C union conformation attribute.
     union CharOrInt {
         a: char, //Size = 1 byte
         b: i32,  //Size = 4 bytes
