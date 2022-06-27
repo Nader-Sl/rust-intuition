@@ -9,6 +9,7 @@
 // using a union which contains all possible data types can remedy this problem.
 
 pub fn main() {
+    
     crate::example_prologue!("Unions");
 
     use std::mem;

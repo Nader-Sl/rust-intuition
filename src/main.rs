@@ -2,15 +2,20 @@ pub mod examples {
     pub mod common_concepts;
     pub mod macros;
     pub mod ownership;
-    pub mod oop {
+    pub mod data_structures {
         pub mod enums;
         pub mod structs;
         pub mod unions;
     }
+
     pub mod collections;
     pub mod error_handling;
-
     pub mod modules;
+
+    pub mod advanced {
+        pub mod generics;
+        pub mod traits;
+    }
 }
 
 fn main() {
@@ -31,14 +36,14 @@ fn main() {
     examples::ownership::dangling_reference();
 
     //oop
-    examples::oop::structs::struct_def_and_init();
-    examples::oop::structs::structs_flavors();
-    examples::oop::structs::structs_mutability();
+    examples::data_structures::structs::struct_def_and_init();
+    examples::data_structures::structs::structs_flavors();
+    examples::data_structures::structs::structs_mutability();
 
-    examples::oop::enums::enums_basic();
-    examples::oop::enums::enums_advanced();
+    examples::data_structures::enums::enums_basic();
+    examples::data_structures::enums::enums_advanced();
 
-    examples::oop::unions::main();
+    examples::data_structures::unions::main();
 
     //modules
     examples::modules::main();
@@ -46,6 +51,16 @@ fn main() {
     //collections
     examples::collections::collection_vec();
     examples::collections::collection_hashmap();
+
+
+    /////////////////////////// Advanced ///////////////////////////////////
+    
+    //traits
+    examples::advanced::traits::main();
+    //generics
+    examples::advanced::generics::manual_duplication();
+    examples::advanced::generics::generic_duplication();
+    
 
     //Error Handling -- Runs last since it demonstrates fatal errors => program termination.
     //Comment the following lines incrementally one at a time after testing each line to try them all out,
