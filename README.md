@@ -1,3 +1,4 @@
 # rust-playground
 
-A rust learn-by-example-and-comments repo, based on the Rust's book chapters flow, with custom examples and heavy comments.
+A repo dedicated for programmers of all levels to learn Rust through extensive clear examples and heavy commentation.
+Will be actively updated.
