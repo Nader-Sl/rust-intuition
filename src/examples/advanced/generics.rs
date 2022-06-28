@@ -65,7 +65,7 @@ pub fn generic_duplication() {
 
     //Here is the single function impl that can be used with any type with the trait bounds
     //std::cmp::PartialOrd + Copy (trait bounds can be checked in the ./traits.rs file)
-    
+
     fn largest<T: std::cmp::PartialOrd + Copy>(list: &[T]) -> T {
         let mut largest = list[0];
 
@@ -90,4 +90,43 @@ pub fn generic_duplication() {
 
     let result = largest(&char_list);
     println!("The largest char is {}", result);
+}
+
+pub fn refs_lifetime_validation () {
+
+ //Book Ref https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html
+
+// Every reference in Rust has a lifetime, which is the scope for which that reference is valid.
+// Rust Burrow checker is a powerful tool to prevent us from writing code that leads to dangling 
+// references and what not, so the Burrow Checker must always be able to track the lifetime of a
+// a memory reference/a burrowed, sometimes we need to be more declarative as coders to help
+// the burrow checker figure out the rest on its own.
+
+//Consider the following 'longest' function which returns the longest of two string slices.
+
+// fn longest(x: &str, y: &str) -> &str {
+//     if x.len() > y.len() { x } else { y }
+// }
+
+//Uncommenting the anove  function will yield this error:
+//"this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `x` or `y`"
+   
+// As mentioned earlier, Every reference in Rust has a lifetime, and the Burrow checker MUST be aware of it.
+// in this case, this is a function that takes in any two string slices and returns any of them conditionally (dynamically).
+// meaning that the Burrow Checker in this case isn't able to guess which arg is it going to return and we  also don't know
+// the lifespans associated with the passed references, and therefore we need a mean to explicitly declare that.
+
+//Here we are using what's called a 'generic lifetime parameter', passed in the same way we pass conventional 
+//generic params except it starts with an apostrophe, indicating that it is a lifetime parameter. 
+//In this way it will be pretty easy for the Burrow checker to validate if we do something stupid at compile time.
+
+fn longest<'q>(x: &'q str, y: &'q str) -> &'q str {
+    if x.len() > y.len() {  x } else { y }
+}
+
+let str1 = "Hello";
+let str2 = "World!";
+
+println!("The longest str is {}", longest(str1,str2));
+
 }

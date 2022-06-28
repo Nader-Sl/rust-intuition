@@ -60,7 +60,7 @@ fn main() {
     //generics
     examples::advanced::generics::manual_duplication();
     examples::advanced::generics::generic_duplication();
-    
+    examples::advanced::generics::refs_lifetime_validation();
 
     //Error Handling -- Runs last since it demonstrates fatal errors => program termination.
     //Comment the following lines incrementally one at a time after testing each line to try them all out,
