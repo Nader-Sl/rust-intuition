@@ -18,7 +18,7 @@ pub fn function_lifetime_generics() {
     //     if x.len() > y.len() { x } else { y }
     // }
 
-    // Uncommenting the anove  function will yield this error:
+    // Uncommenting the above function will yield this error:
     // "this function's return type contains a borrowed value, but the signature does not say whether
     // it is borrowed from `x` or `y`"
 
