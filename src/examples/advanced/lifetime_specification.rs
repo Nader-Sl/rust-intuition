@@ -71,7 +71,7 @@ pub fn struct_lifetime_generics() {
         content: &'a str,
     }
 
-    impl<'a> Text<'a> { // This is how the lifetime attribute is defined in the impl block.
+    impl<'a> Text<'a> { // This is how the lifetime parameters is defined in the impl block.
         fn print(&self){
             println!("Content = {}", self.content);
         }
