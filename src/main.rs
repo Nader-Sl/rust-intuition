@@ -15,6 +15,7 @@ pub mod examples {
     pub mod advanced {
         pub mod generics;
         pub mod traits;
+        pub mod lifetime_specification;
     }
 }
 
@@ -60,7 +61,11 @@ fn main() {
     //generics
     examples::advanced::generics::manual_duplication();
     examples::advanced::generics::generic_duplication();
-    examples::advanced::generics::refs_lifetime_validation();
+    //lifetime specification
+    examples::advanced::lifetime_specification::function_lifetime_generics();
+    examples::advanced::lifetime_specification::struct_lifetime_generics();
+    examples::advanced::lifetime_specification::static_lifetime();
+    examples::advanced::lifetime_specification::lifetime_elision();
 
     //Error Handling -- Runs last since it demonstrates fatal errors => program termination.
     //Comment the following lines incrementally one at a time after testing each line to try them all out,
