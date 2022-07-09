@@ -57,13 +57,13 @@ pub fn closure_capture() {
 pub fn closure_move() {
 
     // Closures can also capture variables by move, which means they can move the ownership of the variables to the closure.
-    // rendering these variables unavailable for use outside the closure.
-    //This technique is mostly useful when passing a closure to a new thread to move the data so it’s owned by the new thread
+    // rendering these variables unavailable for use outside the closure. This technique is mostly useful when passing a closure 
+    // to a new thread to move the data so it’s owned by the new thread.
 
     let numbers = vec![1, 2, 3];
 
-    let handle = std::thread::spawn(move || {
-        println!("Here's a vector of numbers: {:?}", numbers);q
+    let handle = std::thread::spawn(move || { // add 'move' keyword before the pipes to have it in effect.
+        println!("Here's a vector of numbers: {:?}", numbers);
     });
 
     //numbers can no longer be accessed here.
