@@ -55,6 +55,7 @@ use instruments::wind::{
     wood::{clarinet::Clarinet, flute::Flute},
 };
 
+#[test]
 pub fn main() {
 
     crate::example_prologue!("Modules Demo - Playing instruments");

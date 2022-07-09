@@ -1,8 +1,10 @@
 //Don't mind this function, it is just to print the type of the passed param.
+
 pub fn print_type_of<T>(str: &str, _: &T) {
     println!("{} {}", str, std::any::type_name::<T>())
 }
 
+#[test]
 pub fn vars_and_mut() {
     crate::example_prologue!("vars_and_mut");
 
@@ -13,6 +15,7 @@ pub fn vars_and_mut() {
     println!("X = {}, y = {}", x, y);
 }
 
+#[test]
 pub fn common_data_types() {
     crate::example_prologue!("common_data_types");
 
@@ -56,6 +59,7 @@ pub fn common_data_types() {
                                                     //println!("arr = {:#?}, arr2 = {:#?}", arr, arr2); //pretty print 2 (every component on a new line )
 }
 
+
 //multiply the two floats passed in via a tuple param and returns the result.
 fn mul_function(param_x: (f32, f32)) -> f32 {
     let mul = {
@@ -66,6 +70,7 @@ fn mul_function(param_x: (f32, f32)) -> f32 {
     mul //returns mul, no semicolon here.
 }
 
+#[test]
 pub fn functions() {
     crate::example_prologue!("functions");
 
@@ -73,6 +78,7 @@ pub fn functions() {
     println!("mul_function call result: {}", result);
 }
 
+#[test]
 pub fn control_flow() {
     crate::example_prologue!("control_flow");
 
@@ -135,6 +141,7 @@ pub fn control_flow() {
     }
 }
 
+#[test]
 pub fn var_shadowing() {
     crate::example_prologue!("var_shadowing");
 

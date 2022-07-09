@@ -1,4 +1,7 @@
-//Book Ref https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html
+// Book Ref https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html
+// Doc Refs
+// https://doc.rust-lang.org/stable/reference/trait-bounds.html
+// https://doc.rust-lang.org/stable/reference/lifetime-elision.html
 
 // Every reference in Rust has a lifetime, which is the scope for which that reference is valid.
 // Rust Burrow checker is a powerful tool to prevent us from writing code that leads to dangling
@@ -7,7 +10,7 @@
 // for the burrow checker to have a handle on the lifetime expectation of references, and for such
 // scenarios we have to be more declarative with our code and specify lifetimes relations via
 // 'annotations syntax' and 'generic lifetime parameters'
-
+#[test]
 pub fn function_lifetime_generics() {
 
     crate::example_prologue!("function_lifetime_generics");
@@ -60,6 +63,7 @@ pub fn function_lifetime_generics() {
     println!("The longest str is {}", result);
 }
 
+#[test]
 pub fn struct_lifetime_generics() {
 
     crate::example_prologue!("struct_lifetime_generics");
@@ -83,6 +87,7 @@ pub fn struct_lifetime_generics() {
     text.print();
 }
 
+#[test]
 pub fn static_lifetime() {
 
     crate::example_prologue!("static_lifetime");
@@ -96,6 +101,7 @@ pub fn static_lifetime() {
     println!("{}", _str);
 }
 
+#[test]
 pub fn lifetime_elision() {
     
     crate::example_prologue!("lifetime_elision");

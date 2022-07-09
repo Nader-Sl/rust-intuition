@@ -6,6 +6,7 @@
 */
 
 //defining and instantiating structs
+ 
 pub fn struct_def_and_init() {
 
     crate::example_prologue!("struct_def_and_init");
@@ -57,6 +58,7 @@ pub fn struct_def_and_init() {
     );
 }
 
+#[test]
 pub fn structs_flavors() {
 
     crate::example_prologue!("structs_flavors");
@@ -92,6 +94,7 @@ pub fn structs_flavors() {
 
 }
 
+#[test]
 pub fn structs_mutability() {
 
     crate::example_prologue!("structs_mutability");

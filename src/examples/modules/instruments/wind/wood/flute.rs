@@ -10,4 +10,5 @@ impl Instrument for Flute {
     fn play(&self) {
         println!("Playing {:?}", self);
     }
+    
 }

@@ -4,6 +4,7 @@
 * There can only be one owner at a time.
 * When the owner goes out of scope, the value will be dropped.*/
 
+#[test]
 pub fn assignment_ownership() {
     /* Simple types of a fixed size known at compile time such as the scalar types which are entirely living on
     the stack are always copied/cloned on assignment, such types implement the Copy trait and that includes:
@@ -34,6 +35,7 @@ pub fn assignment_ownership() {
     println!("s1 = {}, s2 = {}", s1, s2);
 }
 
+#[test]
 pub fn function_ownership() {
 
     crate::example_prologue!("function_ownership");
@@ -93,6 +95,7 @@ pub fn function_ownership() {
     //println!("s2= {}", s2);
 }
 
+#[test]
 pub fn refs_and_burrowing() {
     /*
        If we want to access the data owned by another variable without having to transfer ownership, we can use references.
@@ -129,6 +132,7 @@ pub fn refs_and_burrowing() {
     //println!("ms1 = {}", ms1);
 }
 
+#[test]
 pub fn slice_type() {
 
     //String slices are very useful in that many times we need to reference only a slice/portion of the string
@@ -161,6 +165,7 @@ pub fn slice_type() {
     
 }
 
+#[test]
 pub fn dangling_reference() {
     crate::example_prologue!("dangling_reference");
     /* It is impossible for the compiled code to have dangling references, the compiler will always catch it at compile phase*/

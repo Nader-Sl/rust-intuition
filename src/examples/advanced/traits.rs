@@ -3,13 +3,15 @@
 // A trait defines functionality a particular type has and can share with other types.
 // We can use traits to define shared behavior in an abstract way. We can use trait bounds
 // to specify that a generic type can be any type that has certain behavior.
-//Traits in concept are similar to interfaces in other languages like Java but with slight differences.
+//T raits in concept are similar to interfaces in other languages like Java but with slight differences.
 
-//Keep in mind that Rust doesn't have the conventional 'hierarchal inheritance' concept.
-//so traits are often the 'goto' when it comes to providing some shared functionality.
+// Keep in mind that Rust doesn't have the conventional 'hierarchal inheritance' concept.
+// so traits are often the 'goto' when it comes to providing some shared functionality.
 
 ///// Lets come up with a game logic to better demonstrate traits and keep it fun. /////
 
+// **Using derive attribute macro is essentially telling the compiler to implement the 'Debug' 
+// trait for us for our struct/enums.
 #[derive(Debug)]
 enum WoodTexture {
     Oak,
@@ -129,6 +131,7 @@ impl Interactable for Chest {
     }
 }
 
+#[test]
 pub fn main() {
     crate::example_prologue!("Traits");
 
@@ -189,13 +192,13 @@ pub fn main() {
     print_interactables(&chest);
 
     ////// Trait bound syntax //////
-    /// 
-    //The impl Trait syntax we saw earlier works for straightforward cases but is actually syntax sugar  
+    ///
+    //The impl Trait syntax we saw earlier works for straightforward cases but is actually syntax sugar
     //for a longer form known as a 'trait bound' which utilizes generics (check out ./generics.rs) it looks like this.
 
-    fn print_mobile_classic<T: Mobile + std::fmt::Debug>(i : &T){
+    fn print_mobile_classic<T: Mobile + std::fmt::Debug>(i: &T) {
         println!("Printing Interactable (classic): {:?}", i);
     }
-  
+
     print_mobile_classic(&player);
 }

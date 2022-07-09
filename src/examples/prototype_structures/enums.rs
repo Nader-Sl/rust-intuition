@@ -1,4 +1,5 @@
 
+#[test]
 pub fn enums_basic() {
 
     crate::example_prologue!("enums_basic");
@@ -20,6 +21,8 @@ pub fn enums_basic() {
     }
 
 }
+
+#[test]
 pub fn enums_advanced() {
     
     crate::example_prologue!("enums_advanced");
