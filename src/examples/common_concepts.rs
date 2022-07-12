@@ -1,9 +1,3 @@
-//Don't mind this function, it is just to print the type of the passed param.
-
-pub fn print_type_of<T>(str: &str, _: &T) {
-    println!("{} {}", str, std::any::type_name::<T>())
-}
-
 #[test]
 pub fn vars_and_mut() {
     crate::example_prologue!("vars_and_mut");
@@ -18,6 +12,11 @@ pub fn vars_and_mut() {
 #[test]
 pub fn common_data_types() {
     crate::example_prologue!("common_data_types");
+
+    //Don't worry about this function, it just prints the type of the passed param.
+    pub fn print_type_of<T>(str: &str, _: &T) {
+        println!("{} {}", str, std::any::type_name::<T>())
+    }
 
     /*Almost all data types can be automatically infered by the compiler
     or even intellisense,however can be explicitly defined for precision.*/
@@ -59,86 +58,23 @@ pub fn common_data_types() {
                                                     //println!("arr = {:#?}, arr2 = {:#?}", arr, arr2); //pretty print 2 (every component on a new line )
 }
 
-
-//multiply the two floats passed in via a tuple param and returns the result.
-fn mul_function(param_x: (f32, f32)) -> f32 {
-    let mul = {
-        //scope based expression that decays into a value.
-        let (x, y) = param_x;
-        x * y
-    };
-    mul //returns mul, no semicolon here.
-}
-
 #[test]
 pub fn functions() {
     crate::example_prologue!("functions");
 
+    //multiply the two floats passed in via a tuple param and returns the result.
+    fn mul_function(param_x: (f32, f32)) -> f32 {
+        let mul = {
+            //scope based expression that decays into a value.
+            let (x, y) = param_x;
+            x * y
+        };
+        mul //returns mul, no semicolon here.
+    }
+
+    //Call the mul_function by passing in a tuple, and storing its result in a variable of type f32.
     let result = mul_function((3.3, 2.2));
     println!("mul_function call result: {}", result);
-}
-
-#[test]
-pub fn control_flow() {
-    crate::example_prologue!("control_flow");
-
-    //standard if-else handling
-    let number = 6;
-
-    if number % 4 == 0 {
-        println!("number is divisible by 4");
-    } else if number % 3 == 0 {
-        println!("number is divisible by 3");
-    } else if number % 2 == 0 {
-        println!("number is divisible by 2");
-    } else {
-        println!("number is not divisible by 4, 3, or 2");
-    }
-
-    //if in a let statement, corresponds to a c++ ternary operator x ? y : z
-    let condition = true;
-    let value = if condition { 10 } else { 0 };
-    println!("value based on condition statement is {}", value);
-
-    //looping
-    let mut loop_count = 0;
-    //loop is short for while(true), it can be labeled or unlabaled, use labaled when in nested control flows to decide which to refer to.
-    'loop_label: loop {
-        loop_count += 1;
-        println!("Loop count {}", loop_count);
-        if loop_count == 5 {
-            break 'loop_label;
-        };
-    }
-
-    //looping over collection elements
-    let arr = 1..=5; //this produces a range of numbers from 1 to 5, the '=' sign to mark the end range as inclusive;
-
-    for e in arr.rev() {
-        //.rev() reverses the range
-        println!("Looping arr element : {}", e);
-    }
-
-    //Matching (Pattern Matching)
-    //Similar to a case switch in other language, but way more powerful.
-
-    use rand::Rng; //using Rng from rand crate (https://docs.rs/rand/0.8.5/rand/trait.Rng.html)
-    let mut rng = rand::thread_rng(); // random generator
-    let number = rng.gen_range(0..=20); // generated a random u32 [0..20]
-
-    print!("Generated a random number {} =>", number);
-    match number {
-        // Match a single value
-        1 => println!("One!"),
-        // Match several values
-        2 | 3 | 5 | 7 | 11 => println!("This is a prime"),
-        // TODO ^ Try adding 13 to the list of prime values
-        // Match an inclusive range
-        13..=19 => println!("A teen"),
-        // Handle the rest of cases
-        _ => println!("Ain't special"),
-        // TODO ^ Try commenting out this catch-all arm
-    }
 }
 
 #[test]
