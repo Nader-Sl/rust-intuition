@@ -10,8 +10,9 @@
 
 ///// Lets come up with a game logic to better demonstrate traits and keep it fun. /////
 
-// **Using derive attribute macro is essentially telling the compiler to implement the 'Debug' 
+// **Using derive attribute macro is essentially telling the compiler to implement the 'Debug'
 // trait for us for our struct/enums.
+
 #[derive(Debug)]
 enum WoodTexture {
     Oak,
@@ -32,7 +33,7 @@ enum Texture {
     Cloth(ClothTexture),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 struct Vector2 {
     x: f32,
     y: f32,
@@ -47,7 +48,7 @@ struct Entity {
 
 #[derive(Debug)]
 struct Player {
-    pub entity: Entity,
+    entity: Entity,
 }
 
 #[derive(Debug)]
@@ -65,21 +66,19 @@ struct Chest {
     entity: Entity,
 }
 
-//Mobile trait to be implemented by both Player & NPC.
-trait Mobile {
-    // Traits can either contain function prototypes to be implemented for a particular type
-    // or have a default impl and can be overriden by another more concrete implementation.
-    fn move_by(&self, diff_vec: Option<Vector2>) {
-        // If vector2 is not assigned, it will move by (1,1)
-        println!(
-            "Called the default Mobile::move_by with diff_vec = {:?}",
-            diff_vec.unwrap_or(Vector2 { x: 1.0, y: 1.0 })
-        );
-    }
+trait EuclideanDist {
+    fn distance(&self, other: &Self) -> f32;
 }
 
-//Interactable trait to be implemented by both Door & Chest.
-trait Interactable {
+impl EuclideanDist for Vector2 {
+    fn distance(&self, other: &Self) -> f32 {
+        let x_diff = self.x - other.x;
+        let y_diff = self.y - other.y;
+        (x_diff * x_diff + y_diff * y_diff).sqrt()
+    }
+}
+//Interaction trait to be implemented by both Door & Chest.
+trait Interaction : std::fmt::Debug {
     // Traits can either contain function prototypes to be implemented for a particular type
     // or have a default impl and can be overriden by another more concrete implementation.
 
@@ -92,27 +91,8 @@ trait Interactable {
     fn lock(&self);
 }
 
-impl Mobile for Player {
-    fn move_by(&self, diff_vec: Option<Vector2>) {
-        // If vector2 is not assigned, it will move by (2,2)
-        println!(
-            "Called the default Player::move_by with diff_vec = {:?}",
-            diff_vec.unwrap_or(Vector2 { x: 2.0, y: 2.0 })
-        );
-    }
-}
-
-impl Mobile for NPC {
-    fn move_by(&self, diff_vec: Option<Vector2>) {
-        // If vector2 is not assigned, it will move by (3,3)
-        println!(
-            "Called the default Player::move_by with diff_vec = {:?}",
-            diff_vec.unwrap_or(Vector2 { x: 3.0, y: 3.0 })
-        );
-    }
-}
-
-impl Interactable for Door {
+ 
+impl Interaction for Door {
     //override default open
     fn open(&self) {
         println!("Called the Door::Open function");
@@ -123,11 +103,43 @@ impl Interactable for Door {
     }
 }
 
-impl Interactable for Chest {
+impl Interaction for Chest {
     //Does not override the open function, default one would be called.
 
     fn lock(&self) {
         println!("Called the Chest::lock function");
+    }
+}
+
+//Mobility trait to be implemented by both Player & NPC.
+trait Mobility {
+    type T; //T is a trait associated type. Its objective is to replace using generics on a trait when possible to improve code readabililty and maintainability.
+    fn move_to(&self, _: &Self::T);// self refers to the implementing object, and Self refers to the type of the implementing object.
+}
+
+impl Mobility for Player {
+    type T = Vector2; //We can specify the type of the associated type in here, we move a play to any position vector.
+    fn move_to(&self, dest: &Vector2) {
+        println!(
+            "Moving Player to destination => {:?}",
+            dest
+        );
+    }
+}
+
+impl Mobility for NPC {
+    type T = Box<dyn Interaction>; //Npc can move to any interactable entity like a door or chest but not to a raw vector position.
+  
+    // We have chosen to use a Box wrapper in here (refer to smart_pointers.rs) because we can't use Interaction trait type directly
+    // since its size is not known at compile time. Also since the underlying concrete type implementing the 'Interaction' trait is 
+    // unknown at compile time (could be door or chest), the 'dyn' keyword has to be prefixed to the trait name to facilitate the 
+    // resolution of the exact trait implementing type at run time via Virtual table referencing. 
+
+    fn move_to(&self, interactable: &Self::T) {
+        println!(
+            "Moving NPC towards interactable => {:?}",
+            interactable
+        );
     }
 }
 
@@ -161,27 +173,36 @@ pub fn main() {
         },
     };
 
-    let chest = Chest {
+    let chest: Box<dyn Interaction + 'static> = Box::new(Chest {
         entity: Entity {
             location: Vector2 { x: 0.0, y: 0.0 },
             name: "chest1".to_owned(),
             texture: Texture::Wood(WoodTexture::Oak),
         },
-    };
+    }) ;
 
+    //Move player to a new location.
+    
+    player.move_to(&Vector2 { x: 2.0, y: 2.0 });
+
+    // Move NPC to a chest.
+ 
+    npc.move_to(&chest);
     ////// Traits as Parameters //////
 
-    //Functions can accept a trait or a combination of traits from various types.
-    //in this case we want to accept only (interactables or Mobile) objects but also we want them to
-    //have the 'debug' trait as well via the #[derive(Debug)] so we can debug print it.
-    //We can specifiy to only allow objects implementing those two traits by adding
-    //those two traits via the '+' sign.
+    // Functions can accept a trait or a combination of traits from various types.
+    // in this case we want to accept only (interactable or Mobile) objects but also we want them to
+    // have the 'debug' trait as well via the #[derive(Debug)] so we can debug print it.
+    // We can specifiy to only allow objects implementing those two traits by adding
+    // those two traits via the '+' sign (for multiple traits).
 
-    fn print_interactables(i: &(impl Interactable + std::fmt::Debug)) {
+    // All type parameters have an implicit bound of Sized (known at compile time) but we need to use a 
+    //special syntax '?Sized' to remove this bound if we need to pass in a dynamic trait object (known only at runtime)
+    fn print_interactables(i: &(impl Interaction + std::fmt::Debug + ?Sized)) {  
         println!("Printing Interactable: {:?}", i);
     }
 
-    fn print_mobile(i: &(impl Mobile + std::fmt::Debug)) {
+    fn print_mobile(i: &(impl Mobility + std::fmt::Debug)) {
         println!("Printing Mobile: {:?}", i);
     }
 
@@ -189,14 +210,14 @@ pub fn main() {
     print_mobile(&npc);
 
     print_interactables(&door);
-    print_interactables(&chest);
+    print_interactables(chest.as_ref());
 
     ////// Trait bound syntax //////
     ///
     //The impl Trait syntax we saw earlier works for straightforward cases but is actually syntax sugar
     //for a longer form known as a 'trait bound' which utilizes generics (check out ./generics.rs) it looks like this.
 
-    fn print_mobile_classic<T: Mobile + std::fmt::Debug>(i: &T) {
+    fn print_mobile_classic<T: Mobility + std::fmt::Debug>(i: &T) {
         println!("Printing Interactable (classic): {:?}", i);
     }
 
