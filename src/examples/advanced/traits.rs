@@ -65,20 +65,8 @@ struct Door {
 struct Chest {
     entity: Entity,
 }
-
-trait EuclideanDist {
-    fn distance(&self, other: &Self) -> f32;
-}
-
-impl EuclideanDist for Vector2 {
-    fn distance(&self, other: &Self) -> f32 {
-        let x_diff = self.x - other.x;
-        let y_diff = self.y - other.y;
-        (x_diff * x_diff + y_diff * y_diff).sqrt()
-    }
-}
 //Interaction trait to be implemented by both Door & Chest.
-trait Interaction : std::fmt::Debug {
+trait Interaction: std::fmt::Debug {
     // Traits can either contain function prototypes to be implemented for a particular type
     // or have a default impl and can be overriden by another more concrete implementation.
 
@@ -91,7 +79,6 @@ trait Interaction : std::fmt::Debug {
     fn lock(&self);
 }
 
- 
 impl Interaction for Door {
     //override default open
     fn open(&self) {
@@ -114,32 +101,26 @@ impl Interaction for Chest {
 //Mobility trait to be implemented by both Player & NPC.
 trait Mobility {
     type T; //T is a trait associated type. Its objective is to replace using generics on a trait when possible to improve code readabililty and maintainability.
-    fn move_to(&self, _: &Self::T);// self refers to the implementing object, and Self refers to the type of the implementing object.
+    fn move_to(&self, _: &Self::T); // self refers to the implementing object, and Self refers to the type of the implementing object.
 }
 
 impl Mobility for Player {
     type T = Vector2; //We can specify the type of the associated type in here, we move a play to any position vector.
     fn move_to(&self, dest: &Vector2) {
-        println!(
-            "Moving Player to destination => {:?}",
-            dest
-        );
+        println!("Moving Player to destination => {:?}", dest);
     }
 }
 
 impl Mobility for NPC {
-    type T = Box<dyn Interaction>; //Npc can move to any interactable entity like a door or chest but not to a raw vector position.
-  
+    type T = Box<dyn Interaction>; //Npcs can move to any interactable entity like a door or chest but not to a raw vector position.
+
     // We have chosen to use a Box wrapper in here (refer to smart_pointers.rs) because we can't use Interaction trait type directly
-    // since its size is not known at compile time. Also since the underlying concrete type implementing the 'Interaction' trait is 
-    // unknown at compile time (could be door or chest), the 'dyn' keyword has to be prefixed to the trait name to facilitate the 
-    // resolution of the exact trait implementing type at run time via Virtual table referencing. 
+    // since its size is not known at compile time. Also since the underlying concrete type implementing the 'Interaction' trait is
+    // unknown at compile time (could be door or chest), the 'dyn' keyword has to be prefixed to the trait name to facilitate the
+    // resolution of the exact trait implementing type at run time via Virtual table referencing.
 
     fn move_to(&self, interactable: &Self::T) {
-        println!(
-            "Moving NPC towards interactable => {:?}",
-            interactable
-        );
+        println!("Moving NPC towards interactable => {:?}", interactable);
     }
 }
 
@@ -150,6 +131,7 @@ pub fn main() {
     //Let's create an instance of each entity type.
 
     let player = Player {
+        // stack instance.
         entity: Entity {
             location: Vector2 { x: 0.0, y: 0.0 },
             name: "Player1".to_owned(),
@@ -158,6 +140,7 @@ pub fn main() {
     };
 
     let npc = NPC {
+        //stack instance.
         entity: Entity {
             location: Vector2 { x: 0.0, y: 0.0 },
             name: "NPC1".to_owned(),
@@ -165,29 +148,64 @@ pub fn main() {
         },
     };
 
-    let door = Door {
-        entity: Entity {
-            location: Vector2 { x: 0.0, y: 0.0 },
-            name: "door1".to_owned(),
-            texture: Texture::Wood(WoodTexture::Willow),
-        },
-    };
+    // We can return an object of a boxed dynamic Interaction type in here for the same reason
+    // explined in the NPC implementation of the Mobility trait, therefore the interactables
+    // are going to be placed on the heap.
 
-    let chest: Box<dyn Interaction + 'static> = Box::new(Chest {
-        entity: Entity {
-            location: Vector2 { x: 0.0, y: 0.0 },
-            name: "chest1".to_owned(),
-            texture: Texture::Wood(WoodTexture::Oak),
-        },
-    }) ;
+    fn spawn_random_interactable(name: String) -> Box<dyn Interaction> {
+        use rand::Rng; //using Rng from rand crate (https://docs.rs/rand/0.8.5/rand/trait.Rng.html)
+        let mut rng = rand::thread_rng(); // random generator
+        let rand_n = rng.gen_range(0..=10);
+
+        let location = Vector2 {
+            // randomly generate a location
+            x: rng.gen_range(0.0..100.0),
+            y: rng.gen_range(0.0..100.0),
+        };
+
+        let texture = if rand_n % 2 == 0 {
+            //randomly generate a texture
+            Texture::Wood(WoodTexture::Oak)
+        } else {
+            Texture::Wood(WoodTexture::Willow)
+        };
+
+        //Spawn a random interactable on the heap.
+        match rand_n {
+            0..=4 => Box::new(Door {
+                entity: Entity {
+                    location,
+                    name,
+                    texture,
+                },
+            }),
+            _ => Box::new(Chest {
+                entity: Entity {
+                    location,
+                    name,
+                    texture,
+                },
+            }),
+        }
+    }
+
+    let mut interactables = Vec::new(); // vector of interactable objects.
+
+    // Spawn 5 interactables of random types (door or chest).
+    for i in 0..5 {
+        let interactable =
+            spawn_random_interactable("Interactable_".to_owned() + i.to_string().as_str());
+        interactables.push(interactable);
+    }
 
     //Move player to a new location.
-    
     player.move_to(&Vector2 { x: 2.0, y: 2.0 });
 
-    // Move NPC to a chest.
- 
-    npc.move_to(&chest);
+    // Move NPC to all spawned interactables.
+    for i in &interactables {
+        npc.move_to(&i);
+    }
+
     ////// Traits as Parameters //////
 
     // Functions can accept a trait or a combination of traits from various types.
@@ -196,9 +214,9 @@ pub fn main() {
     // We can specifiy to only allow objects implementing those two traits by adding
     // those two traits via the '+' sign (for multiple traits).
 
-    // All type parameters have an implicit bound of Sized (known at compile time) but we need to use a 
+    // All type parameters have an implicit bound of Sized (known at compile time) but we need to use a
     //special syntax '?Sized' to remove this bound if we need to pass in a dynamic trait object (known only at runtime)
-    fn print_interactables(i: &(impl Interaction + std::fmt::Debug + ?Sized)) {  
+    fn print_interactable(i: &(impl Interaction + std::fmt::Debug + ?Sized)) {
         println!("Printing Interactable: {:?}", i);
     }
 
@@ -209,8 +227,9 @@ pub fn main() {
     print_mobile(&player);
     print_mobile(&npc);
 
-    print_interactables(&door);
-    print_interactables(chest.as_ref());
+    for i in &interactables {
+        print_interactable(i.as_ref()); //Get the reference from the Box smart pointer.
+    }
 
     ////// Trait bound syntax //////
     ///
