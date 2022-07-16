@@ -66,7 +66,8 @@ struct Chest {
     entity: Entity,
 }
 //Interaction trait to be implemented by both Door & Chest.
-trait Interaction: std::fmt::Debug {
+trait Interaction: std::fmt::Debug { // traits can extend a super trait or multiple using the '+' operator.
+
     // Traits can either contain function prototypes to be implemented for a particular type
     // or have a default impl and can be overriden by another more concrete implementation.
 
