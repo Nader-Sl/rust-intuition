@@ -1,7 +1,6 @@
-# rust-playground
+# rust-intuition
 
-A repo dedicated for programmers of all levels to learn Rust through extensive clear examples and heavy commentation.
-Will be actively updated.
+A Rust intuition repository dedicated for programmers of all levels to learn Rust through extensive clear examples and heavy commentation.
 
 ## Running the examples
 
