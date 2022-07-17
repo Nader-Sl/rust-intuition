@@ -1,6 +1,8 @@
+use crate::*;
+
 #[test]
 pub fn vars_and_mut() {
-    crate::example_prologue!("vars_and_mut");
+    example_prologue!("vars_and_mut");
 
     let x = 5; //immutable by default
                //x = 6; //compile error, its immutable.
@@ -11,12 +13,7 @@ pub fn vars_and_mut() {
 
 #[test]
 pub fn common_data_types() {
-    crate::example_prologue!("common_data_types");
-
-    //Don't worry about this function, it just prints the type of the passed param.
-    pub fn print_type_of<T>(str: &str, _: &T) {
-        println!("{} {}", str, std::any::type_name::<T>())
-    }
+    example_prologue!("common_data_types");
 
     /*Almost all data types can be automatically infered by the compiler
     or even intellisense,however can be explicitly defined for precision.*/
@@ -60,7 +57,7 @@ pub fn common_data_types() {
 
 #[test]
 pub fn functions() {
-    crate::example_prologue!("functions");
+    example_prologue!("functions");
 
     //multiply the two floats passed in via a tuple param and returns the result.
     fn mul_function(param_x: (f32, f32)) -> f32 {
@@ -79,7 +76,7 @@ pub fn functions() {
 
 #[test]
 pub fn var_shadowing() {
-    crate::example_prologue!("var_shadowing");
+    example_prologue!("var_shadowing");
 
     //Same scope shadowing.
     let x = 1;

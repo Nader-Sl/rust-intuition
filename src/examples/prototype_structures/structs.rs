@@ -7,9 +7,11 @@
 
 //defining and instantiating structs
  
+use crate::*; //Import the entire crate.
+
 pub fn struct_def_and_init() {
 
-    crate::example_prologue!("struct_def_and_init");
+    example_prologue!("struct_def_and_init");
 
     //Defining a Rectangle struct.
     struct Rectangle {
@@ -61,7 +63,7 @@ pub fn struct_def_and_init() {
 #[test]
 pub fn structs_flavors() {
 
-    crate::example_prologue!("structs_flavors");
+    example_prologue!("structs_flavors");
 
     // There are 3 main flavours to Rust structs.
     //  1 - standard struct with named fields.
@@ -97,7 +99,7 @@ pub fn structs_flavors() {
 #[test]
 pub fn structs_mutability() {
 
-    crate::example_prologue!("structs_mutability");
+    example_prologue!("structs_mutability");
 
     // By default structs are immmutable, therefore attempting to set one of its fields will result in a compilation error.
     // Structs' fields can't be set as mut (inherited mutability) otherwise the compiler would complain.

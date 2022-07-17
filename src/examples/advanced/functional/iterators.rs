@@ -11,6 +11,8 @@
 // of general purpose containers that are already implement the trait for you in the standard library 
 // like Vec, String, etc.
 
+use crate::*; //Import the entire crate.
+
 #[test]
 pub fn iterators_basic() {
  //TODO

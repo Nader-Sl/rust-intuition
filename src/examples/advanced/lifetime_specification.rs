@@ -10,10 +10,13 @@
 // for the burrow checker to have a handle on the lifetime expectation of references, and for such
 // scenarios we have to be more declarative with our code and specify lifetimes relations via
 // 'annotations syntax' and 'generic lifetime parameters'
+
+use crate::*; //Import the entire crate.
+
 #[test]
 pub fn function_lifetime_generics() {
 
-    crate::example_prologue!("function_lifetime_generics");
+    example_prologue!("function_lifetime_generics");
 
     // Consider the following function  'longest' which returns the longest of two string slices.
 
@@ -66,7 +69,7 @@ pub fn function_lifetime_generics() {
 #[test]
 pub fn struct_lifetime_generics() {
 
-    crate::example_prologue!("struct_lifetime_generics");
+    example_prologue!("struct_lifetime_generics");
 
     // We can define structs to hold references, but in that case we would need to add a lifetime annotation.
 
@@ -90,7 +93,7 @@ pub fn struct_lifetime_generics() {
 #[test]
 pub fn static_lifetime() {
 
-    crate::example_prologue!("static_lifetime");
+    example_prologue!("static_lifetime");
 
     // One special lifetime we need to discuss is 'static, which denotes that the affected reference can live
     // for the entire duration of the program.
@@ -104,7 +107,7 @@ pub fn static_lifetime() {
 #[test]
 pub fn lifetime_elision() {
     
-    crate::example_prologue!("lifetime_elision");
+    example_prologue!("lifetime_elision");
 
     // The compiler uses three rules to figure out the lifetimes of the references when there aren’t explicit annotations.
     // The first rule applies to input lifetimes, and the second and third rules apply to output lifetimes. If the compiler

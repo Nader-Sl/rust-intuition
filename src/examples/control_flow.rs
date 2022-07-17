@@ -5,11 +5,11 @@
 // https://doc.rust-lang.org/stable/reference/expressions/if-expr.html
 // https://doc.rust-lang.org/stable/reference/expressions/match-expr.html
 
-use std::option;
+use crate::*; //Import the entire crate.
 
 #[test]
 pub fn if_else() {
-    crate::example_prologue!("if_else");
+    example_prologue!("if_else");
     //The most common conditional branching among all languages.
 
     let number = 6;
@@ -28,7 +28,7 @@ pub fn if_else() {
 
 #[test]
 pub fn if_in_let_statement() {
-    crate::example_prologue!("if_in_let_statement");
+    example_prologue!("if_in_let_statement");
     // Because if is an expression, we can use it on the right side of a let statement
     // to assign the outcome to a variable.
     let condition = true;
@@ -38,7 +38,7 @@ pub fn if_in_let_statement() {
 
 #[test]
 pub fn loop_keyword() {
-    crate::example_prologue!("loop");
+    example_prologue!("loop");
     // Loop keeps on looping indefinitely the inner content until it breaks or returns optionally.
     let mut loop_count: u32 = 0;
     loop {
@@ -53,7 +53,7 @@ pub fn loop_keyword() {
 
 #[test]
 pub fn while_loop() {
-    crate::example_prologue!("while_loop");
+    example_prologue!("while_loop");
     // While loop is similar to loop, but it has a condition.
     let mut loop_count = 0;
     while loop_count < 5 {
@@ -64,7 +64,7 @@ pub fn while_loop() {
 
 #[test]
 pub fn for_loop() {
-    crate::example_prologue!("for_loop");
+    example_prologue!("for_loop");
     // For loop is similar to while loop, but it has a range.
     for i in 1..=5 {
         //this produces a range of numbers from 1 to 5, the '=' sign to mark the end range as inclusive.
@@ -79,7 +79,7 @@ pub fn labeled_branches() {
     // to that particular tagged branch in nested branching if we want to modify the control flow
     // at that point.
 
-    crate::example_prologue!("labeled_branches");
+    example_prologue!("labeled_branches");
 
     'outer: for i in 1..=5 { // Iteration branch 1
         
@@ -98,7 +98,7 @@ pub fn labeled_branches() {
 
 #[test]
 pub fn match_expressions() {
-    crate::example_prologue!("match_expressions");
+    example_prologue!("match_expressions");
     //Similar to a case switch in other language, but way more powerful.
 
     use rand::Rng; //using Rng from rand crate (https://docs.rs/rand/0.8.5/rand/trait.Rng.html)
@@ -119,7 +119,7 @@ pub fn match_expressions() {
         // TODO ^ Try commenting out this catch-all arm
     }
 
-    crate::example_prologue!("match_guards");
+    example_prologue!("match_guards");
     // Match guards allow you to check for additional conditions before executing the arm.
 
     let mut number: Option<u32> = Option::None; // number is a None value initially.

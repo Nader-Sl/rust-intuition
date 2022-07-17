@@ -6,9 +6,11 @@
 // You can create the closure in one place and then call the closure to evaluate it in a different context.
 // Unlike functions, closures can capture values from the scope in which they’re defined/
 
+use crate::*; //Import the entire crate.
+
 #[test]
 pub fn closure_basic() {
-    crate::example_prologue!("closure_basic");
+    example_prologue!("closure_basic");
 
     let closure_fn = |x: i32| x + 1; // We store the closure in a variable.
     let y = closure_fn(5); // We call the closure.
@@ -17,7 +19,7 @@ pub fn closure_basic() {
 
 #[test]
 pub fn closure_captures() {
-    crate::example_prologue!("closure_captures");
+    example_prologue!("closure_captures");
     // Closures can capture variables:
     // - by reference: &T
     // - by mutable reference: &mut T
@@ -59,7 +61,7 @@ pub fn closure_captures() {
 
 #[test]
 pub fn closure_moves() {
-    crate::example_prologue!("closure_moves");
+    example_prologue!("closure_moves");
     // Closures can also capture variables by move, which means they can move the ownership of the variables to the closure.
     // rendering these variables unavailable for use outside the closure. This technique is mostly useful when passing a closure
     // to a new thread to move the data so it’s owned by the new thread.
@@ -78,7 +80,7 @@ pub fn closure_moves() {
 
 #[test]
 pub fn closure_as_argument() {
-    crate::example_prologue!("closure_as_argument");
+    example_prologue!("closure_as_argument");
     // Closures can be used as arguments / parameters to functions.
 
     // When taking a closure as an input parameter, the closure's complete type must be annotated using one of a few traits,

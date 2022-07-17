@@ -1,8 +1,9 @@
+use crate::*; //Import the entire crate.
 
 #[test]
 pub fn enums_basic() {
 
-    crate::example_prologue!("enums_basic");
+    example_prologue!("enums_basic");
     
     //A simple enum that represents different message commands (like in most other programming languages)
     enum Message {
@@ -25,7 +26,7 @@ pub fn enums_basic() {
 #[test]
 pub fn enums_advanced() {
     
-    crate::example_prologue!("enums_advanced");
+    example_prologue!("enums_advanced");
 
     //Enums, besides the simple type, can have different variants that can associate data to them.
     enum Message {

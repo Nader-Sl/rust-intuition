@@ -4,9 +4,12 @@
 // Generics provide us an effective solution to handle concept duplication without having to duplicate code needlessly.
 // We use generics to create definitions for items like function signatures or structs, which we can then use
 // with many different concrete data types.
+
+use crate::*; //Import the entire crate.
+
 #[test]
 pub fn manual_duplication() {
-    crate::example_prologue!("manual_duplication");
+    example_prologue!("manual_duplication");
 
     // We want to be able to have a functionality that will allow us return the largest
     // value in an array of 2 different types, i32 and char. The classic way to do this is
@@ -49,7 +52,7 @@ pub fn manual_duplication() {
 
 #[test]
 pub fn generic_duplication() {
-    crate::example_prologue!("generic_duplication");
+    example_prologue!("generic_duplication");
 
     // Generics can make our life easier by providing us with a way to have
     // a single mutual implementation of a certain usage, and pass in the data type(s)
@@ -93,7 +96,7 @@ pub fn generic_duplication() {
 #[test]
 pub fn where_clause() {
 
-    crate::example_prologue!("where_clause");
+    example_prologue!("where_clause");
 
     // The where clause is a way to add constraints to a generic type, rendering it easier
     // to read especially with longer and more complex trait bounds.

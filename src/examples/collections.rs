@@ -10,9 +10,11 @@ Rust’s collections can be grouped into four major categories:
 
 // Examples will only be introducing the two most commonly used container types: Vec and HashMap.
 
+use crate::*; //Import the entire crate.
+
 #[test]
 pub fn collection_vec() {
-    crate::example_prologue!("collection_vec");
+    example_prologue!("collection_vec");
 
     /*
        The first collection type we’ll look at is Vec<T>, also known as a vector.
@@ -47,7 +49,7 @@ pub fn collection_vec() {
 
 #[test]
 pub fn collection_hashmap() {
-    crate::example_prologue!("collection_hashmap");
+    example_prologue!("collection_hashmap");
 
     /*
         Hash maps are useful when you want to look up data not by using an index.

@@ -45,7 +45,8 @@ pub mod instruments {
 //Modules paths can be accessed by either Absolute paths or Relative paths.
 
 //This is an Absolute path starting from the crate root file (main.rs for bin or lib.rs for libs).
-use crate::examples::modules::instruments::instrument::Instrument;
+use crate::*; //Import the entire crate.
+use examples::modules::instruments::instrument::Instrument;
 
 //This is a relative path from the current module's path.
 use instruments::percussion::{cajon::Cajon, drums::Drums};
@@ -58,7 +59,7 @@ use instruments::wind::{
 #[test]
 pub fn main() {
 
-    crate::example_prologue!("Modules Demo - Playing instruments");
+    example_prologue!("Modules Demo - Playing instruments");
 
     //We create an array of instruments and iterate over them and call the play function.
     //PS: Box type is a wrapper to give size to non sized things like traits, we will discuss it in a later chapter.

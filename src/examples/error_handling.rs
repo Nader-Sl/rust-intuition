@@ -20,9 +20,11 @@ pub struct Panic {
     //panic = 'abort'
 }
 
+use crate::*; //Import the entire crate.
+
 #[test]
 pub fn panic_intentional() {
-    crate::example_prologue!("Intentional Panic");
+    example_prologue!("Intentional Panic");
     //We can intentionally call panic! macro with a failure message.
     //Since we haven't change the default behaviour of panic in the cargo.toml file
     //panic will print  failure message, unwind and clean up the stack and then terminate the program.
@@ -31,7 +33,7 @@ pub fn panic_intentional() {
 }
 #[test]
 pub fn panic_invalid_memory() {
-    crate::example_prologue!("Inva  lid memory panic");
+    example_prologue!("Inva  lid memory panic");
     //referencing an invalid index (memory access violation) is unrecoverable & will lead to panicing!
     let v = vec![1, 2, 3];
     v[99];
@@ -57,7 +59,7 @@ const FILE_NAME: &str = "sample.txt";
 
 #[test]
     pub fn result_handling_1() {
-        crate::example_prologue!("result_handling_1");
+        example_prologue!("result_handling_1");
         //Try to open the file (returns a Result)
         let open_result = File::open(FILE_NAME);
 
@@ -69,19 +71,19 @@ const FILE_NAME: &str = "sample.txt";
     }
     #[test]
     pub fn result_handling_2() {
-        crate::example_prologue!("result_handling_2");
+        example_prologue!("result_handling_2");
         //More convinient 1 liner panic if error, call 'unwrap' on the result.
         File::open(FILE_NAME).unwrap();
     }
     #[test]
     pub fn result_handling_3() {
-        crate::example_prologue!("result_handling_3");
+        example_prologue!("result_handling_3");
         //More convinient 1 liner panic if error with a custom message, call 'expect' on the result.
         let _resolved_file = File::open(FILE_NAME).expect("Failed to open sample.txt");
     }
     #[test]
     pub fn result_handling_matching() {
-        crate::example_prologue!("error_handling_matching");
+        example_prologue!("error_handling_matching");
 
         //Let's now match the type of error and based on that take an action whether to try recover or panic.
 
@@ -110,7 +112,7 @@ const FILE_NAME: &str = "sample.txt";
     #[test]
     pub fn error_propagation() {
 
-        crate::example_prologue!("error_propagation");
+        example_prologue!("error_propagation");
 
         // We can propagate errors wrapped in a Result to be handled by the caller.
         fn inner_propagate_error() -> Result<String, Error> {
@@ -139,7 +141,7 @@ const FILE_NAME: &str = "sample.txt";
 
     #[test]
     pub fn custom_result() {
-        crate::example_prologue!("custom_result");
+        example_prologue!("custom_result");
 
         //Lets now create our own Result returning function.
 

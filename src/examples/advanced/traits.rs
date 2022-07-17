@@ -13,6 +13,8 @@
 // **Using derive attribute macro is essentially telling the compiler to implement the 'Debug'
 // trait for us for our struct/enums.
 
+use crate::*; //Import the entire crate.
+
 #[derive(Debug)]
 enum WoodTexture {
     Oak,
@@ -69,7 +71,7 @@ struct Chest {
 trait Interaction: std::fmt::Debug { // traits can extend a super trait or multiple using the '+' operator.
 
     // Traits can either contain function prototypes to be implemented for a particular type
-    // or have a default impl and can be overriden by another more concrete implementation.
+    // or have a default impl and can be overridden by another more concrete implementation.
 
     //defaulted function
     fn open(&self) {
@@ -127,7 +129,7 @@ impl Mobility for NPC {
 
 #[test]
 pub fn main() {
-    crate::example_prologue!("Traits");
+    example_prologue!("Traits");
 
     //Let's create an instance of each entity type.
 
@@ -150,7 +152,7 @@ pub fn main() {
     };
 
     // We can return an object of a boxed dynamic Interaction type in here for the same reason
-    // explined in the NPC implementation of the Mobility trait, therefore the interactables
+    // explained in the NPC implementation of the Mobility trait, therefore the interactables
     // are going to be placed on the heap.
 
     fn spawn_random_interactable(name: String) -> Box<dyn Interaction> {

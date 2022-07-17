@@ -7,10 +7,13 @@
 // of a union is determined by the size of its largest field.
 // This is most useful when the type of data being passed through functions is unknown,
 // using a union which contains all possible data types can remedy this problem.
+
+use crate::*; //Import the entire crate.
+
 #[test]
 pub fn main() {
     
-    crate::example_prologue!("Unions");
+    example_prologue!("Unions");
 
     use std::mem;
 

@@ -4,6 +4,8 @@
 * There can only be one owner at a time.
 * When the owner goes out of scope, the value will be dropped.*/
 
+use crate::*; //Import the entire crate.
+
 #[test]
 pub fn assignment_ownership() {
     /* Simple types of a fixed size known at compile time such as the scalar types which are entirely living on
@@ -14,7 +16,7 @@ pub fn assignment_ownership() {
         * The character type, char.
         * Tuples, if they only contain types that also implement Copy. For example, (i32, i32) implements Copy, but (i32, String) does not.
     */
-    crate::example_prologue!("assignment_ownership");
+    example_prologue!("assignment_ownership");
 
     let x = 5; //x owns the data (5)
     let y = x; // y owns a copy of x's data (5) since i32 is a simple type that implements the copy trait.
@@ -38,7 +40,7 @@ pub fn assignment_ownership() {
 #[test]
 pub fn function_ownership() {
 
-    crate::example_prologue!("function_ownership");
+    example_prologue!("function_ownership");
 
     fn takes_ownership(some_string: String) {
         // some_string comes into scope
@@ -103,7 +105,7 @@ pub fn refs_and_burrowing() {
            * references are immutable by default so we can't change their value.
            * references can be set to mutable with one big restriction: you can have only one mutable reference to a particular piece of data at a time.
     */
-    crate::example_prologue!("refs_and_burrowing");
+    example_prologue!("refs_and_burrowing");
 
     fn calculate_length(s: &String) -> usize {
         s.len()
@@ -138,7 +140,7 @@ pub fn slice_type() {
     //String slices are very useful in that many times we need to reference only a slice/portion of the string
     //without having to copy it, String literals themselves are string slices!
 
-    crate::example_prologue!("slice_type");
+    example_prologue!("slice_type");
 
     //It is a good practice to use &str (slice type) to pass any string or a slice of it by reference.
     //The following function accepts both types of String and String Slice (&str) made possible by dered coersions.
@@ -167,7 +169,7 @@ pub fn slice_type() {
 
 #[test]
 pub fn dangling_reference() {
-    crate::example_prologue!("dangling_reference");
+    example_prologue!("dangling_reference");
     /* It is impossible for the compiled code to have dangling references, the compiler will always catch it at compile phase*/
 
     //Uncommenting the following function will throw a compile-time error.
