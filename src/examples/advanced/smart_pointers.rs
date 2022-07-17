@@ -3,7 +3,7 @@
 use libc::c_void; //https://crates.io/crates/libc
 
 use crate::*; //Import the entire crate.
-
+use crate::util::*;
 #[test]
 pub fn box_type() {
     // Boxes don’t have performance overhead, other than storing their data on the heap instead of on the stack.

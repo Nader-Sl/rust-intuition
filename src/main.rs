@@ -1,13 +1,12 @@
-    //Don't worry about this function, it just prints the type of the passed param.
-    pub fn print_type_of<T>(str: &str, _: &T) {
-        println!("{} {}", str, std::any::type_name::<T>())
-    }
+
+//Modules tree.
+pub mod util;
 #[cfg(test)]
 pub mod examples {
     pub mod common_concepts;
+    pub mod control_flow;
     pub mod macros;
     pub mod ownership;
-    pub mod control_flow;
     pub mod prototype_structures {
         pub mod enums;
         pub mod structs;
@@ -20,20 +19,17 @@ pub mod examples {
 
     pub mod advanced {
         pub mod generics;
-        pub mod traits;
         pub mod lifetime_specification;
+        pub mod traits;
 
         pub mod smart_pointers;
         pub mod functional {
             pub mod closures;
             pub mod iterators;
         }
-         
     }
 
     pub mod error_handling;
 }
 
-fn main() {
-     
- }
+fn main() {}

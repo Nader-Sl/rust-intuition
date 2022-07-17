@@ -1,4 +1,5 @@
 use crate::*;
+use crate::util::*;
 
 #[test]
 pub fn vars_and_mut() {
