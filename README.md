@@ -1,7 +1,6 @@
-# rust-playground
+# rust-intuition
 
-A repo dedicated for programmers of all levels to learn Rust through extensive clear examples and heavy commentation.
-Will be actively updated.
+A Rust intuition repository dedicated for programmers of all levels to learn Rust through extensive clear examples and heavy commentation.
 
 ## Running the examples
 
@@ -9,7 +8,7 @@ All the examples are included as assertless tests.
 
 You can run all the examples at once from the terminal via 
 ```
-cargo test -- --test-threads=1 --show-output
+cargo test --release -- --test-threads=1 --show-output
 ```
 ### If you are using VScode you can: ###
 * Skip the terminal command above by Running the build task **"ctrl/cmd + shift + b"**
