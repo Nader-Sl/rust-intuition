@@ -5,6 +5,7 @@ pub mod util;
 pub mod examples {
     pub mod common_concepts;
     pub mod control_flow;
+
     pub mod macros;
     pub mod ownership;
     pub mod prototype_structures {
@@ -27,6 +28,8 @@ pub mod examples {
             pub mod closures;
             pub mod iterators;
         }
+
+        pub mod unsafe_ops;
     }
 
     pub mod error_handling;
