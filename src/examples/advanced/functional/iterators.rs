@@ -122,39 +122,43 @@ pub fn iterator_adaptors() {
 
 #[test]
 pub fn custom_iterator() {
-    /// An iterator which counts from one to five
+    // We can make an iterator out of any struct that implements the Iterator trait.
+    // next() is the only required method for the iterator trait, we can add other optional methods.
+    // Check out docs to see the various optional methods that you can override.
+
+    // Let's create a StopWatch that takes in a limit (in seconds), and decrements the tick on every
+    // iteration until it reaches 0 which marks the end of the iteration.
+
     struct StopWatch {
         limit: usize,
         tick: usize,
     }
-
 
     impl StopWatch {
         fn new(limit: usize) -> StopWatch {
             StopWatch { limit, tick: limit }
         }
     }
-
-    // Then, we implement `Iterator` for our `Counter`:
-
+    // Implement the iterator trait so that we are able to use StopWath as an Iterator.
     impl Iterator for StopWatch {
         type Item = usize; //Item required by the Iterator trait.
 
-        // next() is the only required method, we can add other optional methods, check out docs.
         fn next(&mut self) -> Option<Self::Item> {
-           
-            if self.tick > 0 { // If current tick is > 0, decrement it and return it.
+            if self.tick > 0 {
+                // If current tick is > 0, decrement it and return it.
                 // Decrement the tick.
                 self.tick -= 1;
 
                 Some(self.tick)
-            } else { // else return None, marking the end of iteration.
+            } else {
+                // else return None, marking the end of iteration.
                 None
             }
         }
     }
 
-    for tick in StopWatch::new(10) { //iterate implicity via into_iter().
+    for tick in StopWatch::new(10) {
+        //iterate implicity via into_iter().
         println!("Current Tick : {}", tick);
     }
 }
