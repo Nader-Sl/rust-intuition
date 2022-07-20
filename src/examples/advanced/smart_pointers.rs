@@ -69,6 +69,8 @@ pub fn rc_type() {
 
     // **Note that Rc<T> is only for use in single-threaded scenarios, Arc<T> is used instead for multi-threaded scenarios.**
 
+    example_prologue!("rc_type");
+
     use std::rc::Rc;
 
     let owner_1 = Rc::new(String::from("Shared String"));
@@ -105,6 +107,7 @@ pub fn refcell_type() {
     // Lets create a MessageBox struct which holds a bunch of messages (Strings) in a vector
     // we should be able to push new messages to the message box.
 
+    example_prologue!("refcell_type");
     struct BadMessageBox {
         messages: Vec<String>,
     }
@@ -160,6 +163,8 @@ pub fn custom_smart_pointer() {
     // on the heap, this example however will wrap the data and always places it on the stack, however will demonstrate a typical
     // smart pointer architecture via Deref, DerefMut and Drop traits implementations.
     // PS: To see an example of a custom smart pointer backed by a heap allocation using libc, checkout unsafe_ops.rs.
+
+    example_prologue!("custom_smart_pointer");
 
     use std::ops::{Deref, DerefMut, Drop};
     #[derive(Debug)]

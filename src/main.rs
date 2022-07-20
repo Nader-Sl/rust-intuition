@@ -29,6 +29,7 @@ pub mod examples {
             pub mod iterators;
         }
 
+        pub mod concurrency;
         pub mod unsafe_ops;
     }
 

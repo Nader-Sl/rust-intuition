@@ -128,7 +128,7 @@ pub fn custom_iterator() {
 
     // Let's create a StopWatch that takes in a limit (in seconds), and decrements the tick on every
     // iteration until it reaches 0 which marks the end of the iteration.
-
+    example_prologue!("custom_iterator");
     struct StopWatch {
         limit: usize,
         tick: usize,
