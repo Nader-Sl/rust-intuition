@@ -280,6 +280,21 @@ pub fn weak_type() {
     }
 
     parent_branches[0].print_tree(1);
+
+    //Example Output:
+    //  Parent Branch [0x2121f397170] child of []
+    //         Child Branch0 [0x2121f3aa5a0] child of ["Parent Branch"]
+    //                 Leaf_0 [0x2121f397280] child of ["Child Branch0", "Child Branch1"]
+    //                 Leaf_1 [0x2121f3a9270] child of ["Child Branch0", "Child Branch1"]
+    //                 Leaf_2 [0x2121f3a92e0] child of ["Child Branch0", "Child Branch1"]
+    //                 Leaf_3 [0x2121f3a9350] child of ["Child Branch0", "Child Branch1"]
+    //                 Leaf_4 [0x2121f3a93c0] child of ["Child Branch0", "Child Branch1"]
+    //         Child Branch1 [0x2121f397210] child of ["Parent Branch"]
+    //                 Leaf_0 [0x2121f397280] child of ["Child Branch0", "Child Branch1"]
+    //                 Leaf_1 [0x2121f3a9270] child of ["Child Branch0", "Child Branch1"]
+    //                 Leaf_2 [0x2121f3a92e0] child of ["Child Branch0", "Child Branch1"]
+    //                 Leaf_3 [0x2121f3a9350] child of ["Child Branch0", "Child Branch1"]
+    //                 Leaf_4 [0x2121f3a93c0] child of ["Child Branch0", "Child Branch1"]
 }
 #[test]
 pub fn custom_smart_pointer() {
