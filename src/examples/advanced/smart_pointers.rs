@@ -1,5 +1,7 @@
 // Book Ref : https://doc.rust-lang.org/book/ch15-00-smart-pointers.html
 
+use std::ops::DerefMut;
+
 use crate::util::*;
 use crate::*; //Import the entire crate.
 
@@ -100,7 +102,7 @@ pub fn refcell_type() {
     // The Interior Mutability Pattern
 
     // Interior mutability is a design pattern in Rust that allows you to mutate data even when there are immutable references
-    // to that data; normally, this action is disallowed by the borrowing rules, but thos pattern uses unsafe code inside a data
+    // to that data; normally, this action is disallowed by the borrowing rules, but this pattern uses unsafe code inside a data
     // structure to bend Rust’s usual rules that govern mutation and borrowing. ( refer to unsafe_ops.rs).
     // **Note : We cannot use 'mut' keyword to represent the interior mutability of a struct field.**
 
@@ -155,6 +157,129 @@ pub fn refcell_type() {
 
     let msg_box = GoodMessageBox::new();
     msg_box.push_message(String::from("Hello World from GoodMessageBox"));
+}
+
+#[test]
+pub fn weak_type() {
+    // Weak is a version of Arc that holds a non-owning reference to the managed allocation.
+    // The allocation is accessed by calling upgrade on the Weak pointer, which returns an Option<Arc<T>>.
+    // Since a Weak reference does not count towards ownership it will not prevent the value stored in the
+    // allocation from being dropped, and Weak itself makes no guarantees about the value still being present.
+    // Thus it may return None when upgraded. Note however that a Weak reference does prevent the allocation
+    // itself (the backing store) from being deallocated.
+    // A Weak pointer is useful for keeping a temporary reference to the allocation managed by Arc without
+    // preventing its inner value from being dropped. It is also used to prevent circular references between
+    // Arc pointers, since mutual owning references would never allow either Arc to be dropped
+
+    // In this example we will have a Node that can have multiple parents and children.
+    // Parent nodes can share ownership of children nodes beloning to other parent nodes.
+    // Parents should own the children therefore we use RC<T> for accessing the children, however
+    // the children should still be able to access their parents without having to own them because
+    // otherwise there would be a circular reference issue, and so therefore we will use the Weak<T>
+    // type for accessing the parents.
+
+    example_prologue!("weak_type");
+
+    use std::cell::RefCell;
+    use std::rc::{Rc, Weak};
+    #[derive(Debug)]
+    struct Node {
+        name: String,                     // name of node
+        parent: RefCell<Vec<Weak<Node>>>, // An interiorly mutable vector of weakly referenced parent nodes
+        children: RefCell<Vec<Rc<Node>>>, // An interiorly mutable vector of strongly referenced children nodes
+    }
+
+    impl Node {
+        fn new(name: String) -> Rc<Node> {
+            // Factory method.
+            Rc::new(Node {
+                name,
+                parent: RefCell::new(vec![]),
+                children: RefCell::new(vec![]),
+            })
+        }
+
+        // Creates a new strong referenced child node,  adds a clone to itself to its parent,
+        // adds a weak referenced (downgraded version) of its parents to itself, and finally
+        // returns a downgraded version of itself.
+
+        fn add_child(parents: &Vec<Rc<Node>>, name: String) -> Weak<Node> {
+            let child = Node::new(name); //Create a new strong ref'd child node.
+
+            // Iterate its strong ref'd parent nodes.
+            parents.iter().for_each(|parent| {
+                //downgrade the parent to a weak ref and add it to itself.
+                child.parent.borrow_mut().push(Rc::downgrade(parent));
+                // Add a clone of itself to its strong ref'd parent.
+                parent.children.borrow_mut().push(child.clone())
+            });
+
+            return Rc::<Node>::downgrade(&child); // return a downgraded version of itself (weak ref)
+        }
+
+        fn print_tree(&self, recur_count: usize) {
+            println!(
+                " {} [{:?}] child of {:?}",
+                self.name,        // name of node
+                self as *const _, // address of node (debug formatter prints it in hex)
+                // Map the parent nodes into a collection of strings (parent names).
+                self.parent
+                    .borrow() // we borrow since its RefCell wrapped.
+                    .iter() // We get the iterator.
+                    // We attempt upgrade weakly ref'd parent nodes to strong ref'd ones, in
+                    // case the parent still lives in memory, we map its name otherwise we
+                    // map a defaulted "None". (perhaps the parent was destroyed but child node's
+                    // ownership still shared with other parents).
+                    .map(|p| p
+                        .upgrade() //Try upgrading to strong ref.
+                        .unwrap_or(Node::new(String::from("None"))) // grab its name if avail or default to "None"
+                        .name
+                        .clone()) //clone it because unwrap() gives temporary reference.
+                    .collect::<Vec<String>>() // collect it into a vector of strings that we can print.
+            );
+
+            //Iterate the children nodes recursively and tab out their print in multitude of recur_count.
+            for child in self.children.borrow().iter() {
+                for _ in 0..recur_count {
+                    print!("\t"); // create a tabbed indentation * recur_count
+                }
+                child.print_tree(recur_count + 1);
+            }
+        }
+    }
+
+    // We aim to create one parent Branch node with 'CHILD_BRANCHES' child branches and
+    // 'LEAFS' leaf nodes in which their ownership is shared between the two child branches.
+
+    const CHILD_BRANCHES: usize = 2;
+    const LEAFS: usize = 5;
+
+    let parent_branch = Node::new("Parent Branch".to_string());
+
+    let parent_branches = vec![parent_branch];
+
+    let mut child_branches = vec![];
+
+    for i in 0..CHILD_BRANCHES {
+        // create child branches, add them to the parent branche, and push them to the child branches vector.
+        child_branches.push(Node::add_child(
+            &parent_branches,
+            "Child Branch".to_string() + &i.to_string(),
+        ));
+    }
+
+    for i in 0..LEAFS {
+        // create the leaf nodes and add them to the previously created child branches to share their ownership.
+        Node::add_child(
+            &child_branches
+                .iter()
+                .map(|parent| parent.upgrade().unwrap())
+                .collect::<Vec<_>>(),
+            "Leaf_".to_string() + &i.to_string(),
+        );
+    }
+
+    parent_branches[0].print_tree(1);
 }
 #[test]
 pub fn custom_smart_pointer() {

@@ -34,25 +34,32 @@ pub fn threading() {
     thread_handle.join().unwrap(); // wait for the thread to finish before we return this test.
 }
 
-mod synchronization {
+mod sync_primitives {
+    use super::*;
 
     #[test]
-    pub fn message_passing() {
-        //TODO
+    pub fn arc() {
+        // Atomically Reference Counted.
+
+        // The Arc<T> type is pretty much like the Rc<T> (check smart_pointers.rs) but instead uses
+        // atomic operations for its reference counting which is suitable for multi-threaded contexts.
+        // ** Use RC<T> for single threaded applications for a lower overhead.
+        use std::sync::Arc;
     }
 
     #[test]
-    pub fn arc_sync() {
-        //TODO
+    pub fn weak() {
+        // Atomic Weak type
+
+        // The std::rc::Weak<T> type is pretty much like the std::sync::Weak<T> (check smart_pointers.rs)
+        // but instead uses atomic operations for its reference counting which is suitable for multi-threaded
+        //contexts. **Usestd::rc::Weak<T> for single threaded applications for a lower overhead.
+
+        use std::sync::Weak;
     }
 
     #[test]
     pub fn barrier_sync() {
-        //TODO
-    }
-
-    #[test]
-    pub fn condvar_sync() {
         //TODO
     }
 
@@ -62,6 +69,10 @@ mod synchronization {
     }
 
     #[test]
+    pub fn condvar_sync() {
+        //TODO
+    }
+    #[test]
     pub fn once_sync() {
         //TODO
     }
@@ -70,4 +81,12 @@ mod synchronization {
     pub fn rwlock_sync() {
         //TODO
     }
+}
+
+#[test]
+pub fn message_passing() {
+    // Rust offers the MPSC (Multi-Producer Single-Consumer) model for message/data passing between threads
+    // in which there can be multiple producers (or transmitters) and only one consumer (or receiver).
+    // This model is internally based on a mpsc_queue that implements internal Atomic sync primitives to
+    // ensure thread safety.
 }
