@@ -130,6 +130,7 @@ mod sync_primitives {
 
         // Create a thread to push a value onto the stack every 10 milliseconds.
         thread_handles.push(thread::spawn(move || {
+
             for i in 0..STACK_SIZE {
 
                 let str = "String#".to_string() + &i.to_string();
@@ -199,4 +200,6 @@ pub fn message_passing() {
     // in which there can be multiple producers (or transmitters) and only one consumer (or receiver).
     // This model is internally based on a mpsc_queue that implements internal Atomic sync primitives to
     // ensure thread safety.
+
+    //TODO
 }
