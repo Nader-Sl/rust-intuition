@@ -7,7 +7,7 @@ use std::time::Duration;
 #[test]
 pub fn threading() {
     example_prologue!("threading");
-
+    // == Example ==
     // We will create a threaded announcer that pops the next announcement from a Vec of announcements
     // and prints it every 3 seconds, we concurrently wait on the thread till it finishes to return this function.
 
@@ -35,6 +35,8 @@ pub fn threading() {
 }
 
 mod sync_primitives {
+    use std::thread::JoinHandle;
+
     use super::*;
 
     #[test]
@@ -59,13 +61,121 @@ mod sync_primitives {
     }
 
     #[test]
-    pub fn barrier_sync() {
-        //TODO
+    pub fn barriers() {
+        //Ensures multiple threads will wait for each other to reach a point in the program, before continuing execution all together.
+
+        use std::sync::{Arc, Barrier};
+
+        const THREADS_N: usize = 5; // define the number of threads to use.
+
+        // create a JoinHandle vector to store the threads hands on spwan so that we can use them to join them later.
+        let mut thread_handles = Vec::with_capacity(THREADS_N);
+
+        // Create a THREADS_N size'd barrier to operate on THREADS_N threads, wrap the barrier with an Arc to make it thread safe.
+        let barrier = Arc::new(Barrier::new(THREADS_N));
+
+        for _ in 0..THREADS_N {
+            let barrier = Arc::clone(&barrier); //clone the Arc to increase the strong ref count.
+
+            thread_handles.push(thread::spawn(move || {
+                println!("Hello Rust Fans!");
+                println!("Barriers are great!");
+
+                // Prints the first two messages probably interleavingly amongst the threads.
+
+                barrier.wait(); // Waits for all threads to syncrhonize at this point before catching up with what follows.
+
+                println!("know you know how barriers work."); // Prints after all threads have sync'd without any interleaving.
+
+                barrier.wait(); // Waits for all threads to syncrhonize at this point before catching up with what follows.
+
+                println!("Have a good day!"); // Prints after all threads have sync'd without any interleaving.
+            }));
+        }
+        // Wait for other threads to finish before returning the test by joining the stored handles.
+        for handle in thread_handles {
+            handle.join().unwrap();
+        }
     }
 
+    // The following test 'mutexes' requires either removing the --release flag from the test command line
+    // or alternatively choose to 'Debug' instead of running as test (available via Rust-Analyzer).
+    // The poisoined mutex handling feature won't work in a release test mode.
     #[test]
-    pub fn mutex_sync() {
-        //TODO
+    pub fn mutexes() {
+        //A mutual exclusion primitive useful for protecting shared data
+
+        // This mutex will block threads waiting for the lock to become available. The mutex can also be statically initialized
+        // or created via a new constructor. Each mutex has a type parameter which represents the data that it is protecting.
+        // The data can only be accessed through the RAII guards returned from lock and try_lock, which guarantees that the data
+        // is only ever accessed when the mutex is locked.
+
+        // == Example ==
+        // Suppose we have two threads, one is pushing a value into the stack and the other is popping the last value onto the stack.
+        // at a difference pace, In order to guarantee thread safety, we can wrap the stack (vector) with a mutex to ensure that only
+        // one thread can access it at a time and guarantee a data-race free operation.
+
+        use std::sync::{Arc, Mutex};
+
+        // Create a Mutex to guard a vector of strings of cap = STACK_SIZE for synching over the shared data.
+        // and then wrap the Mutex itself with an Arc to have its ownership shared amongst multiple threads.
+
+        const STACK_SIZE: usize = 10;
+
+        let thread_safe_stack = Arc::new(Mutex::new(Vec::<String>::with_capacity(STACK_SIZE)));
+
+        let mut thread_handles = Vec::<JoinHandle<_>>::with_capacity(2); // storage for the two threads handles.
+
+        let stack = Arc::clone(&thread_safe_stack); //clone the Arc to increase ref count so its not dropped on move.
+
+        // Create a thread to push a value onto the stack every 10 milliseconds.
+        thread_handles.push(thread::spawn(move || {
+            for i in 0..STACK_SIZE {
+
+                let str = "String#".to_string() + &i.to_string();
+
+                // Acquire the lock on the stack, which will block the thread until the lock (underlying resource) is available.
+                // We need to check if there's been a mutex poisioning caused by a panic while the stack lock is being held in another
+                // thread, if so we can choose to panic here, return, or just continue, we'll just continue for now.
+
+                let mut stack = match stack.lock() {
+                    Ok(guard) => guard, // we just return the guard.
+                    Err(poisoned) =>  {
+                        // Poisioned mutex handling.
+                        println!("The popping thread seems to have panicked! but we can continue pushing new values on to the stack.");
+                        poisoned.into_inner() // calling into_inner will just ignore the mutex poisioning and continue its execution.
+                    },
+                };
+                stack.push(str.clone()); // Now that the resource is free, push a string.
+                println!("Pushed : {}", str);
+                thread::sleep(Duration::from_millis(10)); // Sleep 10 millis between pushes.
+            }
+        }));
+
+        let stack = Arc::clone(&thread_safe_stack); //clone the Arc to increase ref count so its not dropped on move.
+
+        // Create another thread to attempt to pop the values off the stack every 20 milliseconds.
+        thread_handles.push(thread::spawn(move || {
+            // Acquire the lock on the stack, which will block the thread until the lock (underlying resource) is available.
+            for i in 0..STACK_SIZE {
+                if let Some(str) = stack.lock().unwrap().pop() {
+                    if i == 2 {
+                        // We intentionally panic on 2nd iteration to test the mutex posioning handler in the pushing thread.
+                        panic!("The Mutex is now Posioned!");
+                    }
+                    println!("Popped  {}", str);
+                }
+
+                thread::sleep(Duration::from_millis(20)); // Sleep 20 millis between attempted pops.
+            }
+        }));
+
+        // Wait for other threads to finish before returning the test by joining the stored handles.
+        for handle in thread_handles {
+            handle.join().unwrap_or_else(|e| {
+                println!("One of the threads has panicked!"); // We expect this to be printed as the popping thread panics.
+            });
+        }
     }
 
     #[test]
