@@ -232,8 +232,11 @@ mod sync_primitives {
 
             // Destructure the done_mutex(Mutex) and cvar(Condvar) by reference (&) from dereferenced (*) notify_prims_ref_ (Arc).
             let (done_mutex, cvar) = &*notify_prims_ref_;
+
             let mut done = done_mutex.lock().unwrap();
+
             *done = true; // Set the done bool to true by re-assigning its dereferenced value.
+            
             cvar.notify_one(); // Notify the popping thread that it can start popping values off the stack.
                                // ** we can also use cvar.notify_all() to notify all the blocked threads if we have more than one.
         }));
@@ -249,7 +252,9 @@ mod sync_primitives {
  
             // Wait for the pushing thread to finish pushing values onto the stack.
             cvar.wait(done_mutex.lock().unwrap());
+
             println!("The pushing thread seems to be done, let's pop the stack");
+
             while let Some(str) = stack_ref_.lock().unwrap().pop() {
                 // Pop off the stack until there are no more values to pop.
                 println!("Popped  {}", str);
