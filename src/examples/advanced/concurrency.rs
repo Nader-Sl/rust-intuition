@@ -41,28 +41,41 @@ mod sync_primitives {
 
     #[test]
     pub fn arc() {
-        // Atomically Reference Counted.
+        example_prologue!("sync_primitives : Arc<T>");
 
-        // The Arc<T> type is pretty much like the Rc<T> (check smart_pointers.rs) but instead uses
-        // atomic operations for its reference counting which is suitable for multi-threaded contexts.
-        // ** Use RC<T> for single threaded applications for a lower overhead.
         use std::sync::Arc;
+        println!(
+            "
+         Atomically Reference Counted.
+
+         The Arc<T> type is pretty much like the Rc<T> (check smart_pointers.rs) but instead uses
+         atomic operations for its reference counting which is suitable for multi-threaded contexts.
+         it requires using std::sync::Arc.,
+         ** Use RC<T> for single threaded applications for a lower overhead.
+        "
+        )
     }
 
     #[test]
     pub fn weak() {
-        // Atomic Weak type
-
-        // The std::rc::Weak<T> type is pretty much like the std::sync::Weak<T> (check smart_pointers.rs)
-        // but instead uses atomic operations for its reference counting which is suitable for multi-threaded
-        //contexts. **Usestd::rc::Weak<T> for single threaded applications for a lower overhead.
-
+        example_prologue!("sync_primitives : Weak<T>");
         use std::sync::Weak;
+
+        println!(
+            "
+        Atomic Weak type
+
+        The std::sync::Weak<T> type is pretty much like the std::rc::Weak<T> (check smart_pointers.rs)
+        but instead uses atomic operations for its reference counting which is suitable for multi-threaded
+        contexts. **Use std::rc::Weak<T> for single threaded applications for a lower overhead.
+        "
+        );
     }
 
     #[test]
-    pub fn barriers() {
+    pub fn barrier() {
         //Ensures multiple threads will wait for each other to reach a point in the program, before continuing execution all together.
+        example_prologue!("sync_primitives : Barrier");
 
         use std::sync::{Arc, Barrier};
 
@@ -102,7 +115,7 @@ mod sync_primitives {
     // or alternatively choose to 'Debug' instead of running as test (available via Rust-Analyzer).
     // The poisoined mutex handling feature won't work in a release test mode.
     #[test]
-    pub fn mutexes() {
+    pub fn mutex() {
         //A mutual exclusion primitive useful for protecting shared data
 
         // This mutex will block threads waiting for the lock to become available. The mutex can also be statically initialized
@@ -115,6 +128,7 @@ mod sync_primitives {
         // at a difference pace, In order to guarantee thread safety, we can wrap the stack (vector) with a mutex to ensure that only
         // one thread can access it at a time and guarantee a data-race free operation.
 
+        example_prologue!("sync_primitives : Mutex<T>");
         use std::sync::{Arc, Mutex};
 
         // Create a Mutex to guard a vector of strings of cap = STACK_SIZE for synching over the shared data.
@@ -181,7 +195,7 @@ mod sync_primitives {
 
     #[test]
     #[allow(unused_must_use)]
-    pub fn condvars() {
+    pub fn condvar() {
         // Conditional Variables.
 
         // Condition variables represent the ability to block a thread such that it consumes no CPU time while waiting for an event to occur.
@@ -198,6 +212,8 @@ mod sync_primitives {
         // there won't be any data race condition having one thread write at a time, and the other read only after
         // the latter has finished writing, but we still have to use a mutex to access the interior mutability pattern
         // offered by a mutex, as the compiler will not allow the use of RefCell in multithreading context for extra safety.
+
+        example_prologue!("sync_primitives : Condvar");
 
         use std::sync::{Arc, Condvar, Mutex};
 
@@ -236,7 +252,7 @@ mod sync_primitives {
             let mut done = done_mutex.lock().unwrap();
 
             *done = true; // Set the done bool to true by re-assigning its dereferenced value.
-            
+
             cvar.notify_one(); // Notify the popping thread that it can start popping values off the stack.
                                // ** we can also use cvar.notify_all() to notify all the blocked threads if we have more than one.
         }));
@@ -249,7 +265,7 @@ mod sync_primitives {
             // Wait for the pushing thread to finish pushing values onto the stack without consuming unneeded cpu in a conventional loop.
 
             let (done_mutex, cvar) = &*notify_prims_ref_;
- 
+
             // Wait for the pushing thread to finish pushing values onto the stack.
             cvar.wait(done_mutex.lock().unwrap());
 
@@ -266,19 +282,92 @@ mod sync_primitives {
             handle.join().unwrap();
         }
     }
+
     #[test]
-    pub fn once_sync() {
-        //TODO
+    pub fn once() {
+        // A synchronization primitive which can be used to run a one-time global initialization.
+        // Useful for one-time initialization for FFI or related functionality. This type can only be constructed with Once::new().
+
+        example_prologue!("sync_primitives : Once");
+
+        //== Example ==
+        use std::panic;
+        use std::sync::Once;
+
+        static INIT: Once = Once::new(); //Doesn't require to be wrapped by an Arc to share among threads.
+
+        let mut thread_handles = vec![];
+
+        // Run 5 threads, each calls the initialization function.
+        for i in 1..6 {
+            thread_handles.push(thread::spawn(move || {
+                INIT.call_once(|| {
+                    // only one thread will get to call this.
+                    println!("call_once() << Called INIT from thread# {}.", i); // printed only once.
+                })
+            }));
+        }
+
+        // Once can be poisoined with panics just like mutexes, When the initialization function panics via call_once
+        // it will not be able to retry initialization again to try and recover, to handle this we can use the call_once_force()
+        // which gives it another chance to retry the init until it succeeds. Once it does, both call_once and call_once_force()
+        // become non-op since it already succeeded and that was the goal, otherwise we can call_once_force() until it succeeds.
+
+        static INIT_: Once = Once::new(); //Doesn't require to be wrapped by an Arc to share among threads.
+
+        // This is a panic hook to supress the default verbose stacktrace output print, make it just print the message instead.
+        panic::set_hook(Box::new(|_info| {
+            println!("{}", _info.to_string());
+        }));
+
+        // Run 5 threads, each calls the initialization function.
+        for i in 1..6 {
+            thread::sleep(Duration::from_millis(20)); // Sleep 20 millis between pushes.
+
+            thread_handles.push(thread::spawn(move || {
+                INIT_.call_once_force(|state| {
+                    if i > 1 {
+                        println!(
+                            "call_once_force() << last OnceState of thread# {} is {}",
+                            i - 1,
+                            if state.is_poisoned() {
+                                "Poisoned"
+                            } else {
+                                "Ok"
+                            }
+                        );
+                    }
+                    if (1..3).contains(&i) {
+                        // Let's get the first and second threads to panic.
+                        panic!("call_once_force() << Panic in INIT in thread# {}", i);
+                    } // panic in INIT.
+
+                    println!("call_once_force() << Called INIT from thread# {}", i);
+                    // printed only once, on third thread
+                })
+            }));
+        }
+
+        // Wait for other threads to finish before returning the test by joining the stored handles.
+        for handle in thread_handles {
+            let res = handle.join();
+            // match the join to force the test pass.
+            match res {
+                Ok(_) => {}
+                Err(_) => {}
+            }
+        }
     }
 
     #[test]
-    pub fn rwlock_sync() {
-        //TODO
+    pub fn rwlock() {
+        example_prologue!("sync_primitives : Rwlock");
     }
 }
 
 #[test]
-pub fn message_passing() {
+pub fn mpsc() {
+    example_prologue!("sync_primitives : mpsc");
     // Rust offers the MPSC (Multi-Producer Single-Consumer) model for message/data passing between threads
     // in which there can be multiple producers (or transmitters) and only one consumer (or receiver).
     // This model is internally based on a mpsc_queue that implements internal Atomic sync primitives to
