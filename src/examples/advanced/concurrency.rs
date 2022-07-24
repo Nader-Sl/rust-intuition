@@ -376,8 +376,7 @@ mod sync_primitives {
         example_prologue!("sync_primitives : Rwlock");
 
         //== Example ==
-        // Lets spawn some threads to read a vector of strings
-        // as only one writer thread is constantly pushing data to it.
+        // Lets spawn some threads to read a vector of strings while only one writer thread pushes data to it.
 
         use std::sync::{Arc, RwLock};
 
@@ -392,6 +391,7 @@ mod sync_primitives {
 
         let rwlock_ref_ = Arc::clone(&rwlock_ref); //clone the Arc so it can be access by multiple threads.
 
+        //Create 1 writer thread that pushes numbers into a vector.
         thread_handles.push(thread::spawn(move || {
             for i in 0..DATA_SIZE {
                 let mut writer = rwlock_ref_.write().unwrap();
@@ -400,18 +400,20 @@ mod sync_primitives {
             }
         }));
 
+        // Spawn READER_THREADS_N reader threads that access the vector via an rwlock to collect the even numbers in the list so far.
         for i in 0..READER_THREADS_N {
             let rwlock_ref_ = Arc::clone(&rwlock_ref); //clone the Arc so it can be access by multiple threads.
             thread_handles.push(thread::spawn(move || {
                 let reader = rwlock_ref_.read().unwrap();
-                // filter out the odd numbers.
+
                 let collected = reader
                     .iter()
-                    .filter(|&x| x % 2 == 0)
-                    .collect::<Vec<&usize>>();
+                    .filter(|&x| x % 2 == 0) // filter out the odd numbers.
+                    .collect::<Vec<&usize>>(); // colelct the iterator into a vector.
                 println!("Reader Thread # {} collected : {:?}", i, collected);
             }));
         }
+        // Wait for other threads to finish before returning the test by joining the stored handles.
         for handle in thread_handles {
             handle.join().unwrap();
         }
