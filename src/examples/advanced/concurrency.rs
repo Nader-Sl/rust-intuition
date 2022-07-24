@@ -376,7 +376,7 @@ mod sync_primitives {
         example_prologue!("sync_primitives : Rwlock");
 
         //== Example ==
-        // To make the usage of an RWLock worth, lets spawn some threads to read a vector of strings
+        // Lets spawn some threads to read a vector of strings
         // as only one writer thread is constantly pushing data to it.
 
         use std::sync::{Arc, RwLock};
