@@ -361,7 +361,60 @@ mod sync_primitives {
 
     #[test]
     pub fn rwlock() {
+        // This type of lock allows a number of readers or at most one writer at any point in time.
+        // The write portion of this lock typically allows modification of the underlying data (exclusive access)
+        // and the read portion of this lock typically allows for read-only access (shared access).
+
+        // The priority policy of the lock is dependent on the underlying operating system’s implementation,
+        // and this type does not guarantee that any particular policy will be used. In particular, a writer which
+        // is waiting to acquire the lock in write might or might not block concurrent calls to read etc..
+
+        //**Note : As a general rule, use an RWlock only in cases where there are so many threads that are concurrently
+        // reading a shared piece of data without any or with only one writer thread, this will improve the concurrency of
+        // the reads which can weigh enough to care about. otherwise use a Mutex as it is a less complex object with less
+        // constraints and more guarantees. */
         example_prologue!("sync_primitives : Rwlock");
+
+        //== Example ==
+        // To make the usage of an RWLock worth, lets spawn some threads to read a vector of strings
+        // as only one writer thread is constantly pushing data to it.
+
+        use std::sync::{Arc, RwLock};
+
+        const READER_THREADS_N: usize = 3;
+
+        const DATA_SIZE: usize = 8;
+
+        let mut thread_handles = Vec::<JoinHandle<_>>::with_capacity(READER_THREADS_N + 1); // +1 for the writer thread.
+
+        // Create a new RwLock around a vector for the numbers to be pushed to by the writer thead and read concurrently by reader threads.
+        let rwlock_ref = Arc::new(RwLock::new(Vec::<usize>::with_capacity(DATA_SIZE)));
+
+        let rwlock_ref_ = Arc::clone(&rwlock_ref); //clone the Arc so it can be access by multiple threads.
+
+        thread_handles.push(thread::spawn(move || {
+            for i in 0..DATA_SIZE {
+                let mut writer = rwlock_ref_.write().unwrap();
+                writer.push(i);
+                println!("Writer Thread Pushed : {}", i);
+            }
+        }));
+
+        for i in 0..READER_THREADS_N {
+            let rwlock_ref_ = Arc::clone(&rwlock_ref); //clone the Arc so it can be access by multiple threads.
+            thread_handles.push(thread::spawn(move || {
+                let reader = rwlock_ref_.read().unwrap();
+                // filter out the odd numbers.
+                let collected = reader
+                    .iter()
+                    .filter(|&x| x % 2 == 0)
+                    .collect::<Vec<&usize>>();
+                println!("Reader Thread # {} collected : {:?}", i, collected);
+            }));
+        }
+        for handle in thread_handles {
+            handle.join().unwrap();
+        }
     }
 }
 
